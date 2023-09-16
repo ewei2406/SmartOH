@@ -8,12 +8,18 @@ import TAComponent from './components/TAComponent';
 import { OHService } from './service';
 import { io, Socket } from "socket.io-client";
 import JoinQueue from './components/JoinQueue';
+import { Student } from '../../Student';
 
 const App: React.FC = () => {
-  const [name, setName] = useState<string>('');
-  const [userGroup, setUserGroup] = useState<string[]>([]);
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
+  const [currentData, setCurrentData] = useState<any>({
+    id: null,
+    roomID: null,
+    rooms: null,
+    isLoggedin: false
+  });
+
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
@@ -41,23 +47,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={loggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
-        
-        <Route path="/joinQueue/:className" element={
-          loggedIn && userGroup.includes('Student') ? <JoinQueue /> : <Navigate to="/login" />
-        } />
-
-        <Route path="/" element={
-          loggedIn ? (
-            <div>
-              <h1>Welcome, {name}!</h1>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {userGroup.includes('TA') && <TAComponent />}
-                {userGroup.includes('Student') && <StudentComponent />}
-              </div>
-            </div>
-          ) : <Navigate to="/login" />
-        } />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/ta/rooms" element={<div>Hello</div>} />
+        <Route path="/ta/rooms/{roomID}" element={<div>Hello</div>} />
+        <Route path="/student/rooms" element={<div>Hello</div>} />
+        <Route path="/student/rooms/{roomID}" element={<div>Hello</div>} />
       </Routes>
     </Router>
   );

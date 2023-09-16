@@ -1,6 +1,7 @@
 // src/JoinQueue.tsx
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { OHService } from '../service';
 
 const JoinQueue: React.FC = () => {
   const { className } = useParams<{ className: string }>();
@@ -8,6 +9,7 @@ const JoinQueue: React.FC = () => {
 
   const handleEnterQueue = () => {
     // Send the question to your backend or handle it according to your needs
+
     alert(`Entered the queue for ${className} with question: ${question}`);
   };
 
