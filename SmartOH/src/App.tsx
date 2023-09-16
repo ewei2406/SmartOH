@@ -3,31 +3,30 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Pages/Login';
 import studentData from './studentData';
-import { OHService } from './service';
+import { OHService } from './OHService';
+import "./App.css"
 import { io, Socket } from "socket.io-client";
-import RoomTAView from './Pages/RoomTAView';
+import TAAllRoomsView from './Pages/TAAllRoomsView';
 import RoomStudentView from './Pages/RoomStudentView';
+import StudentAllRoomsView from './Pages/StudentAllRoomsView';
 
 const App: React.FC = () => {
 
-    const [currentData, setCurrentData] = useState<any>({
+    const [currentData, setCurrentData] = useState({
         id: null,
         roomID: null,
-        rooms: null,
         loggedIn: false,
         userType: 'student'
     });
 
+    const [rooms, setRooms] = useState<any>()
     const [socket, setSocket] = useState<Socket>();
 
     useEffect(() => {
-        console.log("123")
         const s = io("http://localhost:3000")
         setSocket(s)
-        // if (!socket) return;
-        s.on('changed', m => console.log(m))
-        // OHService.subscribe()
-        // console.log("subscripted")
+        s.on('changed', m => setRooms(m))
+        console.log("Connected to the socket")
     }, [])
 
     const handleLogin = () => {
@@ -40,7 +39,7 @@ const App: React.FC = () => {
         }
     };
 
-    console.log(currentData)
+    console.log(currentData, rooms)
 
     return (
         <Router>
@@ -51,9 +50,9 @@ const App: React.FC = () => {
                         <Navigate to={`/${currentData.userType}/rooms`} /> :
                         <Login currentData={currentData} setCurrentData={setCurrentData} handleLogin={handleLogin}
                         />} />
-                <Route path="/ta/rooms" element={<RoomTAView currentData={currentData} setCurrentData={setCurrentData} />} />
+                <Route path="/ta/rooms" element={<TAAllRoomsView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/ta/rooms/{roomID}" element={<div>Hello</div>} />
-                <Route path="/student/rooms" element={<RoomStudentView currentData={currentData} setCurrentData={setCurrentData} />} />
+                <Route path="/student/rooms" element={<StudentAllRoomsView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/student/rooms/{roomID}" element={<div>Hello</div>} />
             </Routes>
         </Router>

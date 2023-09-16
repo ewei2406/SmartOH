@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Inclusive+Sans&display=swap');
+
+:root {
+    --accent: #A385D6;
+    --dimAccent: #211B31;
+    --darker: #080808;
+    --dark: #1E1E1E;
+    --medium: #2A2A2A;
+    --light: #A4A4A4;
+    --lighter: #F0F0F0;
+}
+
+
+body {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    font-family: 'Inclusive Sans', sans-serif;
+    color: var(--lighter);
+    background-color: var(--darker);
+}
+
+button {
+    font-weight: 800;
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    background-color: var(--dimAccent);
+    color: var(--accent);
+}
+
+button:hover {
+    cursor: pointer;
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    background-color: var(--dark);
+    color: var(--medium);
+}
+
+input {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: var(--medium);
+    color: var(--lighter);
+}
+
+input:focus {
+    background-color: var(--dimAccent);
+    color: var(--accent);
+    outline: 1px solid var(--accent);
+}
+
+input:focus::placeholder {
+    color: var(--accent);
+}

@@ -2,10 +2,11 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server, {
+
+const io = require("socket.io")(server, {
     cors: {
-        origin: "*"
+        origin: "*",
+        methods: ["*"]
     }
 });
 
@@ -80,6 +81,13 @@ io.on('connection', (socket) => {
     })
 });
 
+app.use((req, res, next) => {
+    // console.log("A request was sent!", req)
+    next()
+})
+
+app.use(express.json())
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
@@ -114,15 +122,20 @@ app.get('/api/student/leave', (req, res) => {
 
 app.get('/api/ta/join', (req, res) => {
     room = rooms[req.query.roomID]
-    room.TAs.push(new TA(req.query.id))
+    room.TAs.push(req.query.id)
     res.send('Joined the TAs')
     sendUpdate()
 });
 
 app.get('/api/ta/leave', (req, res) => {
+    console.log(req.query.id)
+    console.log(rooms)
     room = rooms[req.query.roomID]
-    room.TAs = room.TAs.filter(ta => ta.id !== req.query.id)
+    room.TAs = room.TAs.filter(ta => ta !== req.query.id)
+    console.log(room.TAs)
     res.send('Left the TAs')
+    console.log("LEFT SUCCESSFULLY")
+    console.log(rooms)
     sendUpdate()
 });
 
