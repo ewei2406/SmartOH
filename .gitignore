@@ -1,1 +1,3 @@
 node_modules
+.openai.sh
+.deep-learning/__pycache__
