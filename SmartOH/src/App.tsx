@@ -1,7 +1,7 @@
 // src/App.tsx
 import React, { useState } from 'react';
-import Login from './components/Login';
-import studentData from './StudentData.tsx';
+import Login from './components/login';
+import studentData from './studentData';
 import StudentComponent from './components/StudentComponent';
 import TAComponent from './components/TAComponent';
 
