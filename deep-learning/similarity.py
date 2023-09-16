@@ -33,7 +33,7 @@ def compute_current_topic(question_list):
 
     prompts = [
         f"You are a bot designed to summarize a list of questions from students in the waiting list for a computer science office hours. Given the below questions, what are three words or less that would be most helpful for other students to know to identify whether they have similar problems? The questions are:  {str(question_list)}",
-        "How would you summarize these problems in one thought and three or fewer words? Keep your response to a single line."
+        "How would you reduce all of these problems to the THREE questions (NO MORE) that would most comprehensively cover them, separated by commas?  If homework or administrative matters are mentioned in a question, they must be included."
     ]
     for i in range(2):
         message = prompts[i]
