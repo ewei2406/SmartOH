@@ -1,7 +1,7 @@
 // src/App.tsx
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './components/login';
 import studentData from './studentData';
 import StudentComponent from './components/StudentComponent';
 import TAComponent from './components/TAComponent';
