@@ -1,38 +1,42 @@
-import nltk
-import string
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
+from flask import Flask, request, jsonify
+from sentence_transformers import SentenceTransformer, util
 
-# Download necessary NLTK data
-nltk.download('punkt')
-nltk.download('stopwords')
+app = Flask(__name__)
 
-# Sample sentences
-sentence1 = "What is DFS?"
-alts = ["what is a graph", "what is djikstras"]
+def your_similarity_function(target_string, string_list):
 
-# Function to preprocess text
-def preprocess_text(text):
-    # Convert to lowercase
-    text = text.lower()
-    # Remove punctuation
-    text = text.translate(str.maketrans("", "", string.punctuation))
-    return text
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
-base = preprocess_text(sentence1)
+    # Two lists of sentences
+    sentences1 = [target_string]
 
-base_tokens = nltk.word_tokenize(base)
+    sentences2 = string_list
 
-for sentence in alts :
-    print(sentence)
-    alt = preprocess_text(sentence)
-    alt_tokens = nltk.word_tokenize(alt)
+    #Compute embedding for both lists
+    embeddings1 = model.encode(sentences1, convert_to_tensor=True)
+    embeddings2 = model.encode(sentences2, convert_to_tensor=True)
 
+    #Compute cosine-similarities
+    cosine_scores = util.cos_sim(embeddings1, embeddings2)
+    return cosine_scores.tolist()
 
-    vectorizer = TfidfVectorizer()
-    tfidf_matrix = vectorizer.fit_transform([base, alt])
+@app.route('/similarity', methods=['POST'])
+def calculate_similarity():
+    try:
+        data = request.json
+        target_string = data.get('target_string')
+        string_list = data.get('string_list')
 
-    cosine_sim = cosine_similarity(tfidf_matrix[0], tfidf_matrix[1])
-    similarity_percentage = cosine_sim[0][0] * 100
+        if not target_string or not string_list:
+            return jsonify({"error": "Both target_string and string_list must be provided"}), 400
 
-    print(f"Similarity with '{sentence}'", similarity_percentage, "%")
+        # Calculate similarity scores
+        similarity_scores = your_similarity_function(target_string, string_list)
+
+        return jsonify({"similarity_scores": similarity_scores})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
