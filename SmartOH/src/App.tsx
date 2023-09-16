@@ -7,8 +7,9 @@ import { OHService } from './OHService';
 import "./App.css"
 import { io, Socket } from "socket.io-client";
 import TAAllRoomsView from './Pages/TAAllRoomsView';
-import RoomStudentView from './Pages/RoomStudentView';
 import StudentAllRoomsView from './Pages/StudentAllRoomsView';
+// @ts-ignore
+import TARoomView from './Pages/TARoomView';
 
 const App: React.FC = () => {
 
@@ -54,6 +55,7 @@ const App: React.FC = () => {
                 <Route path="/ta/rooms/{roomID}" element={<div>Hello</div>} />
                 <Route path="/student/rooms" element={<StudentAllRoomsView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/student/rooms/{roomID}" element={<div>Hello</div>} />
+                <Route path="/test" element={<TARoomView/>}/>
             </Routes>
         </Router>
     );
