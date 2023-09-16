@@ -3,14 +3,10 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
-
-io.on('connection', (socket) => {
-    console.log('a user connected');
-
-    socket.on('playerDataUp', (msg) => {
-        console.log("HIII")
-    })
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
 });
 
 class Student {
@@ -28,19 +24,61 @@ class TA {
     }
 }
 
-queue = []
-TAs = []
-
 rooms = {
-    default: {   
-        queue: [],
-        TAs: []
-    }
+    'room A': {   
+        class: "MATH 1",
+        description: "Office hours in the engineering building basement",
+        isActive: true,
+        'queue': [
+            {
+                id: "Carl",
+                timestamp: new Date(),
+                question: "I dont know 1+1",
+                beginHelpedByID: null
+            },
+            {
+                id: "Danny",
+                timestamp: new Date(),
+                question: "I dont know 2+2",
+                beginHelpedByID: null
+            }
+        ],
+        'TAs': ['Alice', 'Bob']
+    },
+    'room B': {
+        class: "MATH 2",
+        description: "Office hours in the engineering building attic",
+        isActive: true,
+        'queue': [
+            {
+                id: "Ginny",
+                timestamp: new Date(),
+                question: "I dont know 5+5",
+                beginHelpedByID: null
+            },
+            {
+                id: "Hank",
+                timestamp: new Date(),
+                question: "I dont know 6+6",
+                beginHelpedByID: null
+            }
+        ],
+        'TAs': ['Eric', 'Frank']
+    },
 }
 
 const sendUpdate = () => {
     io.emit("changed", rooms)
 }
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    sendUpdate()
+
+    socket.on('playerDataUp', (msg) => {
+        console.log("HIII")
+    })
+});
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
