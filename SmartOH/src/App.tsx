@@ -1,14 +1,10 @@
 // src/App.tsx
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/login';
+import Login from './components/Login';
 import studentData from './studentData';
-import StudentComponent from './components/StudentComponent';
-import TAComponent from './components/TAComponent';
 import { OHService } from './service';
 import { io, Socket } from "socket.io-client";
-import JoinQueue from './components/JoinQueue';
-import { Student } from '../../Student';
 
 const App: React.FC = () => {
 
@@ -16,10 +12,10 @@ const App: React.FC = () => {
     id: null,
     roomID: null,
     rooms: null,
-    isLoggedin: false
+    loggedIn: false,
+    userType: 'student'
   });
 
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
@@ -35,19 +31,27 @@ const App: React.FC = () => {
     console.log("subscripted")
   }, [])
 
-  const handleLogin = (name: string) => {
-    setName(name);
-    const student = studentData.find((student) => student.name === name);
+  const handleLogin = () => {
+    const student = studentData.find((student) => student.name === currentData.id);
     if (student) {
-      setUserGroup(student.groups);
-      setLoggedIn(true);
+       setCurrentData({
+        ...currentData,
+        loggedIn: true
+       })
     }
   };
+
+  console.log(currentData)
 
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path='/' element={<Navigate to={`/login`} />}/>
+        <Route path="/login" element={
+          currentData.loggedIn ? 
+            <Navigate to={`/${currentData.userType}/rooms`} /> : 
+            <Login currentData={currentData} setCurrentData={setCurrentData} handleLogin={handleLogin}
+            />} />
         <Route path="/ta/rooms" element={<div>Hello</div>} />
         <Route path="/ta/rooms/{roomID}" element={<div>Hello</div>} />
         <Route path="/student/rooms" element={<div>Hello</div>} />

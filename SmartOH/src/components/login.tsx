@@ -1,30 +1,31 @@
 // src/Login.tsx
 import React, { useState } from 'react';
 
-interface LoginProps {
-  onLogin: (name: string) => void;
-}
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const [name, setName] = useState<string>('');
-
-  const handleLogin = () => {
-    if (name) {
-      // Dummy code: Here you could send the name to an API, save to local storage, etc.
-      console.log(`User ${name} is logged in.`);
-
-      // Call the parent component's onLogin function to handle successful login
-      onLogin(name);
+const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any, setCurrentData: any, handleLogin: any }) => {
+    const setType = (type: string) => {
+        setCurrentData({
+            ...currentData,
+            userType: type
+        })
     }
-  };
+
+    const setName = (name: string) => {
+        setCurrentData({
+            ...currentData,
+            id: name
+        })
+    }
 
   return (
     <div>
       <h1>Login</h1>
+          <button onClick={() => setType('student')}>I am a student</button>
+          <button onClick={() => setType('ta')}>I am a TA</button>
       <input
         type="text"
         placeholder="Enter your name"
-        value={name}
+        value={currentData.id}
         onChange={(e) => setName(e.target.value)}
       />
       <button onClick={handleLogin}>Login</button>
