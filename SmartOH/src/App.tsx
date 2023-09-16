@@ -1,14 +1,31 @@
 // src/App.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from './components/login';
 import studentData from './studentData';
 import StudentComponent from './components/StudentComponent';
 import TAComponent from './components/TAComponent';
+import { OHService } from './service';
+import { io, Socket } from "socket.io-client";
 
 const App: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [userGroup, setUserGroup] = useState<string[]>([]);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  const [socket, setSocket] = useState<Socket>();
+
+  useEffect(() => {
+    console.log("123")
+    setSocket(io("http://localhost:3000"))
+    if (!socket) return;
+    socket.on('connect', () => {
+      console.log("Connected")
+    })
+
+    socket.on('changed', m => console.log(m))
+    OHService.subscribe()
+    console.log("subscripted")
+  }, [])
 
   const handleLogin = (name: string) => {
     setName(name);

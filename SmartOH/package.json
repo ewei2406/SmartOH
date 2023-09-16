@@ -14,8 +14,11 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
     "@mui/material": "^5.14.9",
+    "@types/socket.io-client": "^3.0.0",
+    "axios": "^1.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.7.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
