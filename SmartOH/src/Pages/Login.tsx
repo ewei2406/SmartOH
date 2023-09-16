@@ -20,15 +20,17 @@ const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any,
   return (
     <div>
       <h1>Login</h1>
-          <button onClick={() => setType('student')}>I am a student</button>
-          <button onClick={() => setType('ta')}>I am a TA</button>
+          <button onClick={() => setType('student')} disabled={currentData.userType === 'student'}>I am a student</button>
+          <button onClick={() => setType('ta')} disabled={currentData.userType === 'ta'}>I am a TA</button>
+      <br/>
       <input
         type="text"
         placeholder="Enter your name"
-        value={currentData.id}
+        value={currentData.id || ""}
         onChange={(e) => setName(e.target.value)}
       />
-      <button onClick={handleLogin}>Login</button>
+          <br />
+      <button onClick={handleLogin} disabled={currentData.id === '' || !currentData.id}>Login</button>
     </div>
   );
 };
