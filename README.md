@@ -9,8 +9,11 @@
 ### The Benefits of Our Approach
 ![benefits](images/benefits.png)
 
-### Our Workflow
+### Our Tech Stack
+![tech](images/tech_stack.png)
+### Our Data Workflow
 ![workflow](images/flowchart.png)
+
 
 
 
