@@ -1,9 +1,15 @@
-from fastapi import FastAPI, HTTPException, Depends
-from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer, util
+import os
+
 import openai
 from dotenv import load_dotenv
-import os
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from sentence_transformers import SentenceTransformer, util
+from util import validate_email, send_email_with_pdf
+from transcribe import AI
+import glob
+
+file_paths = glob.glob('./data/*.m4a')
 
 # Load environment variables
 load_dotenv()
@@ -15,7 +21,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 app = FastAPI()
 
 
-def your_similarity_function(target_string: str, string_list: list[str]):
+def calc_similarity_function(target_string: str, string_list: list[str]):
     # Compute embeddings for both lists
     embeddings1 = model.encode([target_string], convert_to_tensor=True)
     embeddings2 = model.encode(string_list, convert_to_tensor=True)
@@ -26,10 +32,8 @@ def your_similarity_function(target_string: str, string_list: list[str]):
 
 def compute_current_topic(question_list):
 
-
     messages = [ {"role": "system", "content": 
                 "You are a intelligent assistant."} ]
-
 
     prompts = [
         f"You are a bot designed to summarize a list of questions from students in the waiting list for a computer science office hours. Given the below questions, what are three words or less that would be most helpful for other students to know to identify whether they have similar problems? The questions are:  {str(question_list)}",
@@ -56,7 +60,6 @@ def compute_current_topic(question_list):
 class SimilarityInput(BaseModel):
     target_string: str
     string_list: list[str]
-
 """
     {
         "target_string": "What is Dijkstra's algorithm?",
@@ -77,7 +80,7 @@ def calculate_similarity(data: SimilarityInput):
         raise HTTPException(status_code=400, detail="Both target_string and string_list must be provided")
 
     try:
-        similarity_scores = your_similarity_function(target_string, string_list)
+        similarity_scores = calc_similarity_function(target_string, string_list)
         return {"similarity_scores": similarity_scores}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -109,3 +112,62 @@ def get_current_topic(data: TopicInput):
         raise HTTPException(status_code=500, detail=str(e))
     
 
+class EmailInput(BaseModel):
+    email: str
+
+"""
+    {
+        "student_email": "dqx2gm@virginia.edu",
+    }
+"""
+@app.get("/send-report")
+def send_report(data: EmailInput):
+
+    student_email = data.email
+
+    if not validate_email(student_email):
+        raise HTTPException(status_code=400, detail="Invalid email address")
+
+    try:
+        """
+        generating PDF
+        """
+
+        # Initialize the AI object
+        for file_path in file_paths:
+            ai = AI(file_path, './data/sa_speech.json')
+            transcription_result = ai.transcribe()
+            print(f'Transcription for {file_path}: {transcription_result}')
+        
+            # generate_report(transcription_result)
+
+            send_email_with_pdf(student_email, "./data/report.pdf")
+        return {"message": "Report sent successfully to " + student_email}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+# def generate_report(transcription):
+#     messages = [ {"role": "system", "content": 
+#                 "You are a intelligent assistant."} ]
+
+#     prompts = [
+#         "Your job is to take the transcript of a conversation, then summarize it and format it into a brief latex document capturing the questions and the core of the answers.  YOU MUST INCLUDE BOTH THE QUESTION AND THE ANSWER FOR EACH QUESTION THAT IS ASKED OR TOPIC THAT IS DISCUSSED. Here is the transcript:"
+#     ]
+#     for i in range(1):
+#         message = prompts[i]
+
+#         if message:
+#             messages.append(
+#                 {"role": "user", "content": message},
+#             )
+#             chat = openai.ChatCompletion.create(
+#                 model="gpt-3.5-turbo", messages=messages
+#             )
+#         reply = chat.choices[0].message.content
+#         print(f"ChatGPT: {reply}")
+#         if i == 1:
+#             return reply
+#         messages.append({"role": "assistant", "content": reply})
+
+#     return reply
