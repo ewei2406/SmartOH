@@ -26,7 +26,9 @@ const App: React.FC = () => {
     useEffect(() => {
         const s = io("http://localhost:3000")
         setSocket(s)
-        s.on('changed', m => setRooms(m))
+        s.on('changed', m =>  {
+            setRooms(m)
+        })
         console.log("Connected to the socket")
     }, [])
 
@@ -39,6 +41,8 @@ const App: React.FC = () => {
             })
         }
     };
+
+
 
     console.log(currentData, rooms)
 
@@ -55,7 +59,6 @@ const App: React.FC = () => {
                 <Route path="/ta/rooms/:roomID" element={<TARoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/student/rooms" element={<StudentAllRoomsView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/student/rooms/:roomID" element={<StudentRoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
-                <Route path="/test" element={<TARoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
             </Routes>
         </Router>
     );

@@ -10,7 +10,7 @@ import { FaCircleXmark, FaCircleCheck, FaCircleArrowLeft } from 'react-icons/fa6
 
 const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
-    useEffect(() => { }, [rooms])
+    // useEffect(() => { }, [rooms])
 
     const textRef = useRef(null)
     const [question, setQuestion] = useState("")

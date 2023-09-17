@@ -220,12 +220,16 @@ app.get('/api/ta/leave', (req, res) => {
 app.get('/api/ta/move', (req, res) => {
     room = rooms[req.query.roomID]
 
+    
+
     student = room.queue.find(s => s.id === req.query.id)
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
         room.queue.splice(req.query.index, 0, student)
+        console.log('moving someone')
         res.send("Moved the student")
     } else {
+        console.log('failed to move someone')
         res.send("Failed to move the student")
     }
     sendUpdate()
@@ -241,15 +245,16 @@ app.get('/api/ta/kick', (req, res) => {
 app.get('/api/ta/help', (req, res) => {
     room = rooms[req.query.roomID]
     s = room.queue.find(s => s.id === req.query.id)
-    s.helpedBy = req.query.taID
+    s.beginHelpedByID = req.query.taID
     res.send(`Ta ${req.query.taID} is now helping ${req.query.id}`)
     sendUpdate()
 })
 
 app.get('/api/ta/putback', (req, res) => {
+    console.log('putting back' + req.query.id)
     room = rooms[req.query.roomID]
     student = room.queue.find(s => s.id === req.query.id)
-    student.helpedBy = null
+    student.beginHelpedByID = null
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
         room.queue.splice(req.query.index, 0, student)
