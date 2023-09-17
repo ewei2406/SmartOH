@@ -27,9 +27,9 @@ class TA {
 }
 
 rooms = {
-    'OH in room A123': {
-        class: "CS 1000",
-        description: "Office hours in the engineering building basement",
+    '5-7PM Office Hours': {
+        class: "CS 1110",
+        description: "Rice 130 Office Hours",
         isActive: true,
         avgStudentTime: 324,
         'queue': [
@@ -72,8 +72,8 @@ rooms = {
         ],
         'TAs': ['Alice C', 'Bob P']
     },
-    'HW Checkoff OH': {
-        class: "CS 2000",
+    'Thornton Stacks DSA2': {
+        class: "CS 3100",
         description: "Office hours in the engineering building attic",
         isActive: true,
         avgStudentTime: 624,
@@ -81,7 +81,7 @@ rooms = {
             {
                 id: "Ginny G",
                 timestamp: new Date(),
-                question: "Memorization help for drainage homework",
+                question: "Memoization help for drainage homework",
                 beginHelpedByID: ""
             },
             {
@@ -94,6 +94,24 @@ rooms = {
                 id: "Ian I",
                 timestamp: new Date(),
                 question: "How do you find the shortest path in a weighted graph?",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Grace W",
+                timestamp: new Date(),
+                question: "Conceptual Questions on Djikstra's algorithm",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Jackson M",
+                timestamp: new Date(),
+                question: "Going over coin change",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Sullivan M",
+                timestamp: new Date(),
+                question: "Question on greedy choice property for DSA2",
                 beginHelpedByID: ""
             }
         ],
@@ -116,9 +134,66 @@ rooms = {
                 timestamp: new Date(),
                 question: "Last step for turing-complete plants",
                 beginHelpedByID: ""
+            },
+            {
+                id: "Alan T",
+                timestamp: new Date(),
+                question: "Finalizing Shors algorithm",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Edwin Djikstra",
+                timestamp: new Date(),
+                question: "Solving the discrete logarithm homework problem",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Grace H",
+                timestamp: new Date(),
+                question: "I don't know how to solve the halting problem",
+                beginHelpedByID: ""
             }
         ],
         'TAs': ['Petra K', 'Frank Q']
+    },
+    '5-7PM In Person OH': {
+        class: "CS 2130",
+        description: "Office hours in Rice 025",
+        isActive: true,
+        avgStudentTime: 482,
+        'queue': [
+            {
+                id: "Ford Tran",
+                timestamp: new Date(),
+                question: "Bit fiddling homework help",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Dwight S",
+                timestamp: new Date(),
+                question: "How negative numbers are in binary",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Jim H",
+                timestamp: new Date(),
+                question: "Circuit construction help",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Pam B",
+                timestamp: new Date(),
+                question: "Segmentation fault in my code ... help",
+                beginHelpedByID: ""
+            },
+            {
+                id: "Grace H",
+                timestamp: new Date(),
+                question: "Memory allocation error, not sure how to diagnose",
+                beginHelpedByID: ""
+            }
+        ],
+        'TAs': ['Brandon', 'Ravi', 'Ed']
     },
 }
 
