@@ -1,25 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState , useEffect} from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { OHService } from "../OHService";
+import Logout from "../Components/Logout";
+import "./TARoomView.css";
 
 const COLUMN_NAMES = {
-    DO_IT: 'Do it',
-    IN_PROGRESS: 'In Progress',
-    AWAITING_REVIEW: 'Awaiting review',
-    DONE: 'Done',
+  CURRENTLY_HELPING: 'Currently Helping',
+  QUEUE: 'Queue'
 }
-
-const tasks = [
-    { id: 1, name: 'Item 1', column: 'Do it' },
-    { id: 2, name: 'Item 2', column: 'Do it' },
-    { id: 3, name: 'Item 3', column: 'Do it' },
-    { id: 4, name: 'Item 4', column: 'Do it' },
-]
 
 const MovableItem = ({
   id,
   timestamp,
-  beingHelpedByID,
+  beginHelpedByID,
   question,
   index,
   currentColumnName,
@@ -30,8 +24,10 @@ const MovableItem = ({
 }) => {
   const changeItemColumn = (currentItem, columnName) => {
     if(columnName == COLUMN_NAMES.CURRENTLY_HELPING) {
-      console.log(roomID, taID, currentItem.id)
       OHService.helpAsTA(currentItem.taID, currentItem.roomID ,currentItem.id)
+    }
+    else if(columnName == COLUMN_NAMES.QUEUE) {
+      OHService.putbackStudent(currentItem.id, currentItem.roomID , 0)
     }
     setItems((prevState) => {
       return prevState.map((e) => {
@@ -43,49 +39,47 @@ const MovableItem = ({
     });   
   };
 
-    const ref = useRef(null);
+  const ref = useRef(null);
 
-    const [, drop] = useDrop({
-        accept: "Our first type",
-        hover(item, monitor) {
-            if (!ref.current) {
-                return;
-            }
-            const dragIndex = item.index;
-            const hoverIndex = index;
-            // Don't replace items with themselves
-            if (dragIndex === hoverIndex) {
-                return;
-            }
-            // Determine rectangle on screen
-            const hoverBoundingRect = ref.current?.getBoundingClientRect();
-            // Get vertical middle
-            const hoverMiddleY =
-                (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-            // Determine mouse position
-            const clientOffset = monitor.getClientOffset();
-            // Get pixels to the top
-            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-            // Only perform the move when the mouse has crossed half of the items height
-            // When dragging downwards, only move when the cursor is below 50%
-            // When dragging upwards, only move when the cursor is above 50%
-            // Dragging downwards
-            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-                return;
-            }
-            // Dragging upwards
-            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-                return;
-            }
-            // Time to actually perform the action
-            moveCardHandler(dragIndex, hoverIndex);
-            // Note: we're mutating the monitor item here!
-            // Generally it's better to avoid mutations,
-            // but it's good here for the sake of performance
-            // to avoid expensive index searches.
-            item.index = hoverIndex;
-        }
-    });
+  const [, drop] = useDrop({
+    accept: "student",
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      // Get vertical middle
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+      // Get pixels to the top
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      // Time to actually perform the action
+      moveCardHandler(dragIndex, hoverIndex);
+
+      item.index = hoverIndex;
+    }
+  });
 
   const [{ isDragging }, drag] = useDrag({
     item: { index, id, currentColumnName , taID, roomID},
@@ -106,163 +100,165 @@ const MovableItem = ({
     })
   });
 
-    const opacity = isDragging ? 0.4 : 1;
+  const opacity = isDragging ? 0.4 : 1;
 
-    drag(drop(ref));
-
-    return (
-        <div ref={ref} className="movable-item" style={{ opacity }}>
-            {name}
-        </div>
-    );
-};
-
-const Column = ({ children, className, title }) => {
-    const [{ isOver, canDrop }, drop] = useDrop({
-        accept: "Our first type",
-        drop: () => ({ name: title }),
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop()
-        }),
-        // Override monitor.canDrop() function
-        canDrop: (item) => {
-            const { DO_IT, IN_PROGRESS, AWAITING_REVIEW, DONE } = COLUMN_NAMES;
-            const { currentColumnName } = item;
-            return (
-                currentColumnName === title ||
-                (currentColumnName === DO_IT && title === IN_PROGRESS) ||
-                (currentColumnName === IN_PROGRESS &&
-                    (title === DO_IT || title === AWAITING_REVIEW)) ||
-                (currentColumnName === AWAITING_REVIEW &&
-                    (title === IN_PROGRESS || title === DONE)) ||
-                (currentColumnName === DONE && title === AWAITING_REVIEW)
-            );
-        }
-    });
-
-    const getBackgroundColor = () => {
-        if (isOver) {
-            if (canDrop) {
-                return "rgb(188,251,255)";
-            } else if (!canDrop) {
-                return "rgb(255,188,188)";
-            }
-        } else {
-            return "";
-        }
-    };
-
-    return (
-        <div
-            ref={drop}
-            className={className}
-            style={{ backgroundColor: getBackgroundColor() }}
-        >
-            <p>{title}</p>
-            {children}
-        </div>
-    );
-};
-
-const TARoomView = ({ currentData, setCurrentData, rooms}) => {   
-
-  var [roomID, setRoomID] = useState('room A');
-  var [taID, settaID] = useState('Alice');
-  const [items, setItems] = useState();
-
-  const studentColumn = (student, taID) => {
-    if(student.beginHelpedByID == taID) {
-      return 'Currently Helping'
-    }
-    else {
-      return 'Queue'
-    }
-  }
-
-    const moveCardHandler = (dragIndex, hoverIndex) => {
-        const dragItem = items[dragIndex];
-
-    if (dragStudent) {
-
-      OHService.moveStudentAsTA(taID, roomID, dragStudent.id, hoverIndex)
-
-      setItems((prevState) => {
-        const coppiedStateArray = [...prevState];
-
-                // remove item by "hoverIndex" and put "dragItem" instead
-                const prevItem = coppiedStateArray.splice(hoverIndex, 1, dragItem);
-
-        // remove item by "dragIndex" and put "prevItem" instead
-        coppiedStateArray.splice(dragIndex, 1, prevItem[0]);
-        
-        return coppiedStateArray;
-      });
-    }
-  };
-
-  const returnStudentsInQueue = () => {
-    return items
-      .filter((student) => student.beginHelpedByID == null)
-      .map((student, index) => (
-        <MovableItem
-          key={index}
-          id={student.id}
-          taID={taID}
-          beingHelpedByID={student.beginHelpedByID}
-          currentColumnName={studentColumn(student, taID)}
-          timestamp={new Date()}
-          setItems={setItems}
-          index={index}
-          moveCardHandler={moveCardHandler}
-          roomID={roomID}
-        />
-      ));
-  }
-  const returnStudentsBeingHelped = () => {
-    return items
-      .filter((student) => student.beginHelpedByID == taID)
-      .map((student, index) => (
-        <MovableItem
-          key={index}
-          id={student.id}
-          taID={taID}
-          beingHelpedByID={student.beginHelpedByID}
-          currentColumnName={studentColumn(student, taID)}
-          timestamp={new Date()}
-          setItems={setItems}
-          index={index}
-          moveCardHandler={moveCardHandler}
-          roomID={roomID}
-        />
-      ));
-  }
-
-  const { CURRENTLY_HELPING, QUEUE } = COLUMN_NAMES;
+  drag(drop(ref));
 
   return (
-    <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h1>
-            CS 3100 - Office Hours
-        </h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-            <div style={{ color: '#085f05' }}>● Connected</div>
-            <Logout currentData={currentData} setCurrentData={setCurrentData} />
-        </div>
-      </div>
-      <div className='container1'>
-        <DndProvider backend={HTML5Backend}>
-          <Column title={CURRENTLY_HELPING} className="column currently-helping-column">
-            {returnStudentsBeingHelped()}
-          </Column>
-          <Column title={QUEUE} className="column queue-column">
-            {returnStudentsInQueue()}
-          </Column>
-        </DndProvider>  
-      </div>
+    <div ref={ref} className="movable-item" style={{ opacity }}>
+      {id}
     </div>
   );
 };
 
-export default TARoomView
+const Column = ({ children, className, title}) => {
+  const [{ isOver, canDrop }, drop] = useDrop({
+    accept: "student",
+    drop: () => ({ name: title }),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    }),
+  });
+
+  const getBackgroundColor = () => {
+    if (isOver) {
+      if (canDrop) {
+        return "rgb(188,251,255)";
+      } else if (!canDrop) {
+        return "rgb(255,188,188)";
+      }
+    } else {
+      return "";
+    }
+  };
+
+  return (
+    <div
+      ref={drop}
+      className={className}
+      style={{ backgroundColor: getBackgroundColor() }}
+    >
+      <p>{title}</p>
+      {children}
+    </div>
+  );
+};
+
+const TARoomView = ({ currentData, setCurrentData, rooms}) => { 
+
+  console.log('rerender')
+  
+  var [roomID, setRoomID] = useState(currentData.roomID);
+  var [taID, settaID] = useState(currentData.id);
+  
+
+  if(rooms) {
+    const [items, setItems] = useState(rooms[roomID].queue);
+    const studentColumn = (student, taID) => {
+      if(student.beginHelpedByID == taID) {
+        return 'Currently Helping'
+      }
+      else {
+        return 'Queue'
+      }
+    }
+
+    useEffect(() => {
+      if(rooms) {
+        setRoomID(currentData.roomID)
+        settaID(currentData.id)
+        setItems(rooms[currentData.roomID].queue)
+      }
+    },[rooms])  
+
+    const moveCardHandler = (dragIndex, hoverIndex) => {
+      const dragStudent = items[dragIndex];
+
+      if (dragStudent) {
+
+        OHService.moveStudentAsTA(taID, roomID, dragStudent.id, hoverIndex)
+
+        setItems((prevState) => {
+          const coppiedStateArray = [...prevState];
+
+          // remove item by "hoverIndex" and put "dragItem" instead
+          const prevItem = coppiedStateArray.splice(hoverIndex, 1, dragStudent);
+
+          // remove item by "dragIndex" and put "prevItem" instead
+          coppiedStateArray.splice(dragIndex, 1, prevItem[0]);
+          
+          return coppiedStateArray;
+        });
+      }
+    };
+
+    const returnStudentsInQueue = () => {
+      return items
+        .filter((student) => student.beginHelpedByID == null)
+        .map((student, index) => (
+          <MovableItem
+            key={student.id}
+            id={student.id}
+            taID={taID}
+            beginHelpedByID={student.beginHelpedByID}
+            currentColumnName={studentColumn(student, taID)}
+            timestamp={new Date()}
+            setItems={setItems}
+            index={index}
+            moveCardHandler={moveCardHandler}
+            roomID={roomID}
+          />
+        ));
+    }
+    const returnStudentsBeingHelped = () => {
+      return items
+        .filter((student) => student.beginHelpedByID === taID)
+        .map((student, index) => (
+          <MovableItem
+            key={student.id + '0' + index}
+            id={student.id}
+            taID={taID}
+            beginHelpedByID={student.beginHelpedByID}
+            currentColumnName={studentColumn(student, taID)}
+            timestamp={new Date()}
+            setItems={setItems}
+            index={index}
+            moveCardHandler={moveCardHandler}
+            roomID={roomID}
+          />
+        ));
+    }
+
+    const { CURRENTLY_HELPING, QUEUE } = COLUMN_NAMES;
+
+    return (
+      <div className="container">
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <h1>
+              {`${rooms[currentData.roomID].class} - Office Hours`}
+          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+              <div style={{ color: '#085f05' }}>● Connected</div>
+              <Logout currentData={currentData} setCurrentData={setCurrentData} />
+          </div>
+        </div>
+        <div className='container1'>
+          <DndProvider backend={HTML5Backend}>
+            <Column title={CURRENTLY_HELPING} className="column currently-helping-column">
+              {returnStudentsBeingHelped()}
+            </Column>
+            <Column title={QUEUE} className="column queue-column">
+              {returnStudentsInQueue()}
+            </Column>
+          </DndProvider>  
+        </div>
+      </div>
+    );
+    }
+  else {
+    return <></>
+  }
+};
+
+export default TARoomView;

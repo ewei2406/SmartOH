@@ -1,6 +1,4 @@
-
-
-  .container {
+ .container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -10,7 +8,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-}
+  }
 
 .column {
     height: max-content;
@@ -41,7 +39,7 @@
     border-radius: 5px;
     background-color: var(--light);
     height: 100px;
-    width: 140px;
+    width: 100%;
     margin: 10px auto;
     display: flex;
     justify-content: center;

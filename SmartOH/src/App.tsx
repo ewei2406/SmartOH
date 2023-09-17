@@ -26,7 +26,9 @@ const App: React.FC = () => {
     useEffect(() => {
         const s = io("http://localhost:3000")
         setSocket(s)
-        s.on('changed', m => setRooms(m))
+        s.on('changed', m =>  {
+            setRooms(m)
+        })
         console.log("Connected to the socket")
     }, [])
 

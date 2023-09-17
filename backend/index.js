@@ -15,7 +15,7 @@ class Student {
         this.id = id;
         this.timestamp = new Date();
         this.question = question;
-        this.helpedBy = null;
+        this.beginHelpedByID = null;
     }
 }
 
@@ -243,15 +243,16 @@ app.get('/api/ta/kick', (req, res) => {
 app.get('/api/ta/help', (req, res) => {
     room = rooms[req.query.roomID]
     s = room.queue.find(s => s.id === req.query.id)
-    s.helpedBy = req.query.taID
+    s.beginHelpedByID = req.query.taID
     res.send(`Ta ${req.query.taID} is now helping ${req.query.id}`)
     sendUpdate()
 })
 
 app.get('/api/ta/putback', (req, res) => {
+    console.log('putting back' + req.query.id)
     room = rooms[req.query.roomID]
     student = room.queue.find(s => s.id === req.query.id)
-    student.helpedBy = null
+    student.beginHelpedByID = null
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
         room.queue.splice(req.query.index, 0, student)

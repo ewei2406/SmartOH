@@ -6,7 +6,7 @@ import { OHService } from "../OHService"
 
 const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
-    useEffect(() => { }, [rooms])
+    // useEffect(() => { }, [rooms])
 
     const textRef = useRef(null)
     const [question, setQuestion] = useState("")

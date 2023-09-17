@@ -10,6 +10,10 @@ const TAAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
     const navigate = useNavigate()
 
     const joinRoom = (roomID: string) => {
+        setCurrentData({
+            ...currentData,
+            roomID: roomID
+        })
         console.log(currentData.id)
         OHService.joinAsTA(currentData.id, roomID)
         navigate('/ta/rooms/' + roomID)
