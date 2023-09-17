@@ -28,7 +28,8 @@ body {
 
 button {
     font-weight: 800;
-    border-radius: 10px;
+    font-family: 'Inclusive Sans', sans-serif !important;
+     border-radius: 10px;
     padding: 10px;
     border: none;
     background-color: var(--dimAccent);

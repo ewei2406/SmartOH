@@ -9,13 +9,10 @@ import UserIcon from "../Components/UserIcon";
 import { FaXmark, FaCircleCheck, FaCircleXmark, FaUserGroup, FaClock, FaBolt, FaCircleArrowLeft, FaCircleArrowDown } from 'react-icons/fa6'
 import { PiDotsThreeVerticalBold } from 'react-icons/pi'
 import Popup from "../Components/Popup";
-<<<<<<< HEAD
 import { GridLoader } from "react-spinners"
 import { useNavigate } from "react-router-dom";
-=======
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
->>>>>>> 4fef374cdeddcbac6b7caf1311907f031d24bb0b
 
 const COLUMN_NAMES = {
     CURRENTLY_HELPING: 'Currently Helping',
@@ -350,7 +347,11 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
                 ));
         }
 
+
+        const [similaritiesLoading, setsimilaritiesLoading] = useState(false)
+
         const calculatePercentages = () => {
+            setsimilaritiesLoading(true)
             let target = items.filter((student) => student.beginHelpedByID === taID).map((student) => student.question);
             console.log('hello')
             if(target.length < 1) {
@@ -376,6 +377,7 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
                     return student;
                 });
                 setItems(newItems);
+                setsimilaritiesLoading(false);
             })
         }
 
@@ -406,8 +408,6 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
 
         return (
             <div className="container" style={{ width: 800 }}>
-              <button onClick={calculatePercentages}>
-              </button>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Logo />
                     <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
@@ -428,6 +428,13 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
                             Average Wait Time 
                             <span style={{ display: 'flex', alignItems: 'center', fontWeight: 800, color: 'var(--accent)' }}> <FaBolt style={{ display: 'block' }} /> {Math.round(rooms && rooms[currentData.roomID] && (rooms[currentData.roomID].avgStudentTime / 6) / 10)} min</span>
                         </h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h2 className="withIcon"><FaBolt /> Identify Topic Similarities</h2>
+                            <button style={{ display: 'flex' }} onClick={() => calculatePercentages()} >{similaritiesLoading ? <GridLoader color="var(--accent)" size={4} margin={0} speedMultiplier={2} /> : <FaBolt />}</button>
+                        </div>
+                        <div style={{ width: '100%', position: 'relative', color: loading ? 'var(--light)' : 'var(--light)' }}>
+                            <div style={{ fontSize: '1em' }}>Use AI to calculate similarity scores of students in the queue with respect to student you are currently helping.</div>
+                        </div>
                     </div>
 
                     <div style={{ width: '50%', display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -445,11 +452,11 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
                         </h2>
                         <div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h2 className="withIcon"><FaBolt/> Room Topic Summary</h2>
+                                <h2 className="withIcon"><FaBolt/> Create Summary of Topics</h2>
                                 <button style={{ display: 'flex' }} onClick={() => generate()} >{loading ? <GridLoader color="var(--accent)" size={4} margin={0} speedMultiplier={2}/> : <FaBolt />}</button>
                             </div>
                             <div style={{ width: '100%', position: 'relative', color: loading ? 'var(--light)' : 'var(--light)' }}>
-                                <div style={{ filter: loading ? 'blur(5px)' : 'none', fontSize: '1em' }}>{summaryText.split("\n").map(c => <div>{c}</div>)}</div>
+                                <div style={{ filter: loading ? 'blur(5px)' : 'none', fontSize: '1em' }}><span style={{ color: 'var(--accent)'}}>AI Summary:</span> {summaryText.split("\n").map(c => <div>{c}</div>)}</div>
                                 <div className="withIcon" style={{ display: loading ? 'flex' : 'none', justifyContent: 'center', position: 'absolute', color: 'var(--accent)', top: 0, bottom: 0, right: 0, left: 0, margin: 'auto'}}>
                                     <GridLoader color="var(--accent)" size={7} margin={0} speedMultiplier={2} /> Generating AI Summary...
                                 </div>
