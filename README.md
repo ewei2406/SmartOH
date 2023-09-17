@@ -4,11 +4,13 @@
 # Smart Office Hours
 
 ### The Opportunity for SmartOH
-![Header](images/opportunity.png)
+![opportunity](images/opportunity.png)
 
 ### The Benefits of Our Approach
-![Header](images/benefits.png)
+![benefits](images/benefits.png)
 
+### Our Workflow
+![workflow](images/flowchart.png)
 
 
 
@@ -18,6 +20,6 @@
 
 
 ### Student Question Functionality
-![Header](images/join_room.png)
-![Header](images/room_queue.png)
+![join](images/join_room.png)
+![queue](images/room_queue.png)
 
