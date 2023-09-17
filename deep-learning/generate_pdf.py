@@ -47,7 +47,7 @@ class PDFGenerator:
 
     def run_conversation(self):
         # Step 1: send the conversation and available functions to GPT
-        messages = [{"role": "user", "content": "Your job is to take the transcript of a conversation, then summarize it and format it into a brief latex document capturing the questions and the core of the answers.  YOU MUST INCLUDE BOTH THE QUESTION AND THE ANSWER FOR EACH QUESTION THAT IS ASKED OR TOPIC THAT IS DISCUSSED. You may include knowledge that is not discussed in the latex file. Here is the transcript. Make sure you are including the correct packages that can be run. {}".format(self.transcription)}]
+        messages = [{"role": "user", "content": "Your job is to take the transcript of a conversation, then summarize it and format it into a brief latex document capturing the questions and the core of the answers.  YOU MUST INCLUDE BOTH THE QUESTION AND THE ANSWER FOR EACH QUESTION THAT IS ASKED OR TOPIC THAT IS DISCUSSED. You may include knowledge that is not discussed in the latex file. You can generate graphs. Here is the transcript. Make sure you are including the correct packages that can be run. {}".format(self.transcription)}]
 
         functions = [
             {

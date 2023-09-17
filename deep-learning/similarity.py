@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer, util
-from util import validate_email, send_email_with_pdf
+from util import validate_email, send_email_with_pdf, get_google_drive_service, upload_file_to_drive
 from transcribe import AI
 import glob
 from generate_pdf import PDFGenerator
@@ -187,6 +187,10 @@ def send_report(data: EmailInput):
             pdf_generator.run_conversation()
 
             # pdf is created in /deep-learning/temp.pdf
+            print("PDF generated")
+            # upload to google drive
+            service = get_google_drive_service()
+            upload_file_to_drive(service, './temp.pdf', 'application/pdf')
         
             # send_email_with_pdf(student_email, "./data/report.pdf")
         return {"message": "Report sent successfully to " + student_email}

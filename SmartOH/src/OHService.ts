@@ -50,6 +50,7 @@ const putbackStudent = (studentID: string, roomID: string, index: number) => {
     console.log('PUTTING BACK ' + studentID);
     axios.get(`/api/ta/putback?roomID=${roomID}&id=${studentID}&index=${index}`)
 }
+const getSimilarities = (request: any) => {
 
 const getSummary = (roomID: string, onFinish: any) => {
     console.log("Summary")

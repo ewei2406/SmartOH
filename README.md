@@ -1,17 +1,50 @@
-
-
-![Header](images/top_logo.png)
 # Smart Office Hours
 
+![Header](images/top_logo.png)
+
+Smart Office Hours aims to simplify the coordination between students and teaching assistants during office hours. Utilizing cutting-edge technology, we make it easy for students to get the help they need while optimizing TA efficiency using AI, data analytics, and a robust tech stack.
+
+## Table of Contents
+
+1. [Opportunity](#the-opportunity-for-smartoh)
+2. [Benefits](#the-benefits-of-our-approach)
+3. [Tech Stack](#our-tech-stack)
+4. [Data Workflow](#our-data-workflow)
+5. [Functionality](#functionality)
+    - [For Students](#functionality-for-students)
+    - [For TAs](#functionality-for-tas)
+6. [Installation and Running](#installation-and-running)
+7. [Usage](#usage)
+8. [License](#license)
+
+---
+
 ### The Opportunity for SmartOH
+
 ![opportunity](images/opportunity.png)
 
+The current situation in educational institutions requires a better-managed system for office hours. SmartOH addresses this need effectively.
+
+---
+
 ### The Benefits of Our Approach
+
 ![benefits](images/benefits.png)
 
+Our unique approach offers various benefits such as ease of use, real-time updates, and an optimized queue management system.
+
+---
+
 ### Our Tech Stack
+
 ![tech](images/tech_stack.png)
+
+We utilize a robust tech stack to ensure scalability and performance.
+
+---
+
 ### Our Data Workflow
+
 ![workflow](images/flowchart.png)
 
 ![login](images/login.png)
