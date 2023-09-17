@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Pages/Login';
 import studentData from './studentData';
-import { OHService } from './OHService';
 import "./App.css"
 import { io, Socket } from "socket.io-client";
 import TAAllRoomsView from './Pages/TAAllRoomsView';
@@ -53,10 +52,10 @@ const App: React.FC = () => {
                         <Login currentData={currentData} setCurrentData={setCurrentData} handleLogin={handleLogin}
                         />} />
                 <Route path="/ta/rooms" element={<TAAllRoomsView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
-                <Route path="/ta/rooms/:roomID" element={<div>Hello</div>} />
+                <Route path="/ta/rooms/{roomID}" element={<TARoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/student/rooms" element={<StudentAllRoomsView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
-                <Route path="/student/rooms/:roomID" element={<StudentRoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms} />} />
-                <Route path="/test" element={<TARoomView/>}/>
+                <Route path="/student/rooms/{roomID}" element={<div>Hello</div>} />
+                <Route path="/test" element={<TARoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
             </Routes>
         </Router>
     );
