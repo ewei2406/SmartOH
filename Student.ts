@@ -13,6 +13,7 @@ export interface TA {
 export interface Room {
     isActive: boolean
     class: string
+    avgStudentTime: number
     queue: Student[]
     description: string
     helpers: TA[]

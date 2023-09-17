@@ -1,0 +1,8 @@
+.cardScroller {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 800px;
+    overflow: scroll;
+}

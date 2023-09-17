@@ -30,6 +30,7 @@ rooms = {
         class: "MATH 1",
         description: "Office hours in the engineering building basement",
         isActive: true,
+        avgStudentTime: 324,
         'queue': [
             {
                 id: "Carl",
@@ -42,6 +43,30 @@ rooms = {
                 timestamp: new Date(),
                 question: "I dont know 2+2",
                 beginHelpedByID: null
+            },
+            {
+                id: "E",
+                timestamp: new Date(),
+                question: "I dont know 2+2",
+                beginHelpedByID: null
+            },
+            {
+                id: "F",
+                timestamp: new Date(),
+                question: "I dont know 2+2",
+                beginHelpedByID: null
+            },
+            {
+                id: "G",
+                timestamp: new Date(),
+                question: "I dont know 2+2",
+                beginHelpedByID: null
+            },
+            {
+                id: "H",
+                timestamp: new Date(),
+                question: "I dont know 2+2",
+                beginHelpedByID: null
             }
         ],
         'TAs': ['Alice', 'Bob']
@@ -50,6 +75,49 @@ rooms = {
         class: "MATH 2",
         description: "Office hours in the engineering building attic",
         isActive: true,
+        avgStudentTime: 624,
+        'queue': [
+            {
+                id: "Ginny",
+                timestamp: new Date(),
+                question: "I dont know 5+5",
+                beginHelpedByID: null
+            },
+            {
+                id: "Hank",
+                timestamp: new Date(),
+                question: "I dont know 6+6",
+                beginHelpedByID: null
+            }
+        ],
+        'TAs': ['Eric', 'Frank']
+    },
+    'room C': {
+        class: "MATH 3",
+        description: "Office hours in the engineering building attic",
+        isActive: true,
+        avgStudentTime: 482,
+        'queue': [
+            {
+                id: "Ginny",
+                timestamp: new Date(),
+                question: "I dont know 5+5",
+                beginHelpedByID: null
+            },
+            {
+                id: "Hank",
+                timestamp: new Date(),
+                question: "I dont know 6+6",
+                beginHelpedByID: null
+            }
+        ],
+        'TAs': ['Eric', 'Frank']
+    },
+    'room D': {
+        class: "MATH 4",
+        description: "Office hours in the engineering building attic",
+        isActive: true,
+        avgStudentTime: 138,
         'queue': [
             {
                 id: "Ginny",

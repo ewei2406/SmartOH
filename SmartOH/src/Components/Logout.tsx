@@ -27,7 +27,7 @@ export const Logout = ({ currentData, setCurrentData }: any) => {
     if (!currentData.id) navigate('/login');
 
     return (
-        <button onClick={logout}>
+        <button onClick={logout} style={{ flexGrow: '0' , display: 'block', filter: 'hue-rotate(90deg)' }}>
             Log Out
         </button>
     )

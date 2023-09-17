@@ -17,6 +17,8 @@ const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any,
         })
     }
 
+    const [password, setPassword] = useState("")
+
     const leftActive = currentData.userType === 'student'
 
     return (
@@ -31,13 +33,15 @@ const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any,
                 </div>
 
                 <div style={{ 
-                    backgroundColor: 'var(--darker)', 
+                    backgroundColor: 'var(--dark)', 
                     borderRadius: `${leftActive ? 0 : 10}px ${!leftActive ? 0 : 10}px 10px 10px`, 
-                    border: '1px solid var(--accent)', 
-                    padding: '20px',
+                    border: '1px solid var(--medium)', 
+                    padding: '25px',
                     display: 'flex',
+                    paddingTop: 40,
                     justifyContent: 'center',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    gap: '15px'
                     }}>
                     <input
                         type="text"
@@ -45,8 +49,15 @@ const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any,
                         value={currentData.id || ""}
                         onChange={(e) => setName(e.target.value)}
                     />
-                    <br />
-                    <button onClick={handleLogin} disabled={currentData.id === '' || !currentData.id}>Login</button>
+
+                    <input
+                        style={{ width: 250 }}
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button style={{ marginTop: '20px' }} onClick={handleLogin} disabled={currentData.id === '' || !currentData.id}>Login</button>
                 </div>
             </div>
         </div>
