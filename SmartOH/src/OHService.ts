@@ -6,34 +6,43 @@ const subscribe = () => {
     socket.on('changed', m => console.log(m))
 }
 
+const sendRequest = (request: string) => {
+    axios.get(request)
+}
+
 const joinAsStudent = (
     studentID: string, roomID: string, question: string) => {
 
-    axios.get(
+    sendRequest(
         `/api/student/join?id=${studentID}&question=${question}&roomID=${roomID}`)
 }
 
 const leaveAsStudent = (studentID: string, roomID: string) => {
-    axios.get(`/api/student/leave?id=${studentID}&roomID=${roomID}`)
+    sendRequest(`/api/student/leave?id=${studentID}&roomID=${roomID}`)
+}
+
+const updateQuestion = (studentID: string, roomID: string, newQuestion: string) => {
+    sendRequest(`/api/student/edit?id=${studentID}&roomID=${roomID}&question=${encodeURIComponent(newQuestion)}`)
 }
 
 const joinAsTA = (
     taID: string, roomID: string) => {
 
-    axios.get(
+    sendRequest(
         `/api/ta/join?id=${taID}&roomID=${roomID}`)
 }
 
 const leaveAsTA = (taID: string, roomID: string) => {
     console.log("LEAVING")
-    axios.get(`/api/ta/leave?id=${taID}&roomID=${roomID}`)
+    sendRequest(`/api/ta/leave?id=${taID}&roomID=${roomID}`)
 }
 
 const moveStudentAsTA = (index: number, roomID: string, studentID: string) => {
     console.log("MOVING " + studentID)
-    axios.get(`/api/ta/move?index=${index}&roomID=${roomID}&id=${studentID}`)
+    
+    sendRequest(`/api/ta/move?index=${index}&roomID=${roomID}&id=${studentID}`)
 }
 
-const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA }
+const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA, updateQuestion }
 
 export {OHService}

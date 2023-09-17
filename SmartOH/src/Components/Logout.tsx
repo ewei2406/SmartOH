@@ -4,8 +4,7 @@ import { OHService } from '../OHService';
 export const Logout = ({ currentData, setCurrentData }: any) => {
     const navigate = useNavigate();
     const logout = () => {
-        navigate('/login');
-
+        
         if (currentData.roomID) {
             if (currentData.userType === 'ta') {
                 OHService.leaveAsTA(currentData.id, currentData.roomID)
@@ -13,7 +12,7 @@ export const Logout = ({ currentData, setCurrentData }: any) => {
                 OHService.leaveAsStudent(currentData.id, currentData.roomID)
             }
         }
-
+        
         setCurrentData({
             ...currentData,
             id: null,
@@ -22,6 +21,8 @@ export const Logout = ({ currentData, setCurrentData }: any) => {
             loggedIn: false,
             userType: 'student'
         })
+        
+        navigate('/login');
     }
 
     if (!currentData.id) navigate('/login');

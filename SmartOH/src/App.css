@@ -6,7 +6,7 @@
     --darker: #080808;
     --dark: #1E1E1E;
     --medium: #2A2A2A;
-    --light: #A4A4A4;
+    --light: rgb(149, 149, 149);
     --lighter: #F0F0F0;
 }
 
