@@ -57,7 +57,6 @@ const App: React.FC = () => {
                 <Route path="/ta/rooms/{roomID}" element={<TARoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/student/rooms" element={<StudentAllRoomsView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
                 <Route path="/student/rooms/{roomID}" element={<StudentRoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
-                <Route path="/test" element={<TARoomView currentData={currentData} setCurrentData={setCurrentData} rooms={rooms}/>} />
             </Routes>
         </Router>
     );
