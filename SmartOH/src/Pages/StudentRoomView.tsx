@@ -22,9 +22,13 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
     console.log(currentData, rooms)
 
     let queue = []
+    let TAs = []
+
     if (rooms && rooms[currentData.roomID]) {
         queue = rooms[currentData.roomID].queue.filter((s: any) => s.beginHelpedByID === "")
+        TAs = rooms[currentData.roomID].TAs
     }
+
 
     console.log(queue)
 
@@ -106,13 +110,13 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                         <div className="withIcon"> <FaUserGroup/> TAs</div>
                         <br />
                         <div style={{ display: 'flex', gap: -50, marginTop: '15px', marginLeft: '15px' }}>
-                            {queue.slice(0, 5).map((t: any) => <UserIcon key={t.id} name={t.id} size={50} />)}
-                            {queue.length > 5 && <div style={{
+                            {TAs.slice(0, 5).map((t: any) => <UserIcon key={t} name={t} size={50} />)}
+                            {TAs.length > 5 && <div style={{
                                 borderRadius: 50, border: '2px solid var(--dark)', padding: '0 10px',
                                 height: 50, fontWeight: 800, backgroundColor: 'var(--medium)', minWidth: 30,
                                 display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -10, zIndex: 999
                             }}
-                            >{queue.length - 5}+</div>}
+                            >{TAs.length - 5}+</div>}
                         </div>
                     </h2>
 

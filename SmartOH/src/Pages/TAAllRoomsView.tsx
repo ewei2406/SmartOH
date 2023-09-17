@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom"
 import Logout from "../Components/Logout"
 import RoomCard from "../Components/RoomCard"
 import { OHService } from "../OHService"
+import Logo from "../Components/Logo"
 
 
 
@@ -21,14 +22,15 @@ const TAAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
 
     return <div style={{ userSelect: 'none' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1>
-                Hi, {currentData.id || "unknown"}!
-            </h1>
+            <Logo/>
             <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
                 <div style={{ color: '#085f05' }}>● Connected</div>
                 <Logout currentData={currentData} setCurrentData={setCurrentData} />
             </div>
         </div>
+        <h1>
+            👋 Hi, {currentData.id || "unknown"}!
+        </h1>
         <div>
             <h2>
                 Your Active Rooms

@@ -193,6 +193,7 @@ app.get('/api/student/edit', (req, res) => {
 
 app.get('/api/student/leave', (req, res) => {
     room = rooms[req.query.roomID]
+    if (!room) return res.send('failed');
     room.queue = room.queue.filter(s => s.id !== req.query.id)
     res.send('Left the queue')
     sendUpdate()
