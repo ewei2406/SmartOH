@@ -15,8 +15,7 @@ Smart Office Hours aims to simplify the coordination between students and teachi
     - [For TAs](#functionality-for-tas)
 6. [Installation and Running](#installation-and-running)
 7. [Usage](#usage)
-8. [Contributing](#contributing)
-9. [License](#license)
+8. [License](#license)
 
 ---
 
@@ -96,12 +95,6 @@ cd SmartOH
 ## Usage
 
 Explain here how users can take advantage of the features of SmartOH.
-
----
-
-## Contributing
-
-If you'd like to contribute to the project, please read our [Contributing Guidelines](CONTRIBUTING.md).
 
 ---
 
