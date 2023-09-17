@@ -15,10 +15,10 @@
 ![workflow](images/flowchart.png)
 
 ### Functionality for Students
-![join](images/class_student.png)
-![question](images/question.png)
-![queue](images/queue_student.png)
+![join](images/student_rooms.png)
+![question](images/student_question.png)
+![queue](images/student_queue.png)
 
 ### Functionality for TAs
-![class](images/class_ta.png)
-![room](images/room_ta.png)
+![class](images/ta_rooms.png)
+![room](images/ta_queue.png)
