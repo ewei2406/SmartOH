@@ -16,7 +16,20 @@ const TAAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
     console.log(rooms)
 
     return <div>
-        hello world TA view
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h1>
+                Hi, {currentData.id || "unknown"}!
+            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+                <div style={{ color: '#085f05' }}>● Connected</div>
+                <Logout currentData={currentData} setCurrentData={setCurrentData} />
+            </div>
+        </div>
+
+        <div>
+            <h2>
+                Your Active Office Hours
+            </h2>
         <br />
 
         {rooms && Object.keys(rooms).map((k) => 
@@ -24,6 +37,7 @@ const TAAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
         )}
 
         <Logout currentData={currentData} setCurrentData={setCurrentData}/>
+    </div>
     </div>
 }
 
