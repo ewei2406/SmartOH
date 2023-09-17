@@ -14,7 +14,7 @@
 
 
 ### TA Office Hours Functionality
-gi
+
 
 
 ### Student Question Functionality
