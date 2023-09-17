@@ -210,12 +210,16 @@ app.get('/api/ta/leave', (req, res) => {
 app.get('/api/ta/move', (req, res) => {
     room = rooms[req.query.roomID]
 
+    
+
     student = room.queue.find(s => s.id === req.query.id)
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
         room.queue.splice(req.query.index, 0, student)
+        console.log('moving someone')
         res.send("Moved the student")
     } else {
+        console.log('failed to move someone')
         res.send("Failed to move the student")
     }
     sendUpdate()

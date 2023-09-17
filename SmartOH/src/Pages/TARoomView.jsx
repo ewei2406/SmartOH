@@ -2,6 +2,7 @@ import React, { useRef, useState , useEffect} from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { OHService } from "../OHService";
+import Logout from "../Components/Logout";
 import "./TARoomView.css";
 
 const COLUMN_NAMES = {
@@ -18,9 +19,14 @@ const MovableItem = ({
   currentColumnName,
   moveCardHandler,
   setItems,
-  taID
+  taID,
+  roomID
 }) => {
   const changeItemColumn = (currentItem, columnName) => {
+    if(columnName == COLUMN_NAMES.CURRENTLY_HELPING) {
+      console.log(roomID, taID, currentItem.id)
+      OHService.helpAsTA(currentItem.taID, currentItem.roomID ,currentItem.id)
+    }
     setItems((prevState) => {
       return prevState.map((e) => {
         return {
@@ -74,23 +80,16 @@ const MovableItem = ({
   });
 
   const [{ isDragging }, drag] = useDrag({
-    item: { index, id, currentColumnName },
+    item: { index, id, currentColumnName , taID, roomID},
     type: "student",
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
 
-      console.log('dropResult', dropResult)
-
       if (dropResult) {
-        const { name } = dropResult;
-        const { CURRENTLY_HELPING, QUEUE} = COLUMN_NAMES;
-        switch (name) {
-          case CURRENTLY_HELPING:
-            changeItemColumn(item, CURRENTLY_HELPING);
-            break;
-          case QUEUE:
-            changeItemColumn(item, QUEUE);
-            break;
+        if (dropResult.name != currentColumnName) {
+          // Only change the column if the item was dropped in a different column
+          changeItemColumn(item, dropResult.name);
+
         }
       }
     },
@@ -144,29 +143,11 @@ const Column = ({ children, className, title}) => {
   );
 };
 
-const TARoomView = (props) => {   
+const TARoomView = ({ currentData, setCurrentData, rooms}) => {   
 
-  var [taID, settaID] = useState('');
-  const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    setItems(
-      [
-        {
-          id: "Carl",
-          timestamp: new Date(),
-          question: "I dont know 1+1",
-          beginHelpedByID: null
-        },
-        {
-          id: "Danny",
-          timestamp: new Date(),
-          question: "I dont know 2+2",
-          beginHelpedByID: 'Alice'
-        }
-      ],)
-    settaID('Alice')
-  }, [])
+  var [roomID, setRoomID] = useState('room A');
+  var [taID, settaID] = useState('Alice');
+  const [items, setItems] = useState();
 
   const studentColumn = (student, taID) => {
     if(student.beginHelpedByID == taID) {
@@ -181,6 +162,9 @@ const TARoomView = (props) => {
     const dragStudent = items[dragIndex];
 
     if (dragStudent) {
+
+      OHService.moveStudentAsTA(taID, roomID, dragStudent.id, hoverIndex)
+
       setItems((prevState) => {
         const coppiedStateArray = [...prevState];
 
@@ -188,9 +172,7 @@ const TARoomView = (props) => {
         const prevItem = coppiedStateArray.splice(hoverIndex, 1, dragStudent);
 
         // remove item by "dragIndex" and put "prevItem" instead
-        console.log('hello')
         coppiedStateArray.splice(dragIndex, 1, prevItem[0]);
-        OHService.moveStudentAsTA(dragIndex, taID, dragStudent.id)
         
         return coppiedStateArray;
       });
@@ -211,6 +193,7 @@ const TARoomView = (props) => {
           setItems={setItems}
           index={index}
           moveCardHandler={moveCardHandler}
+          roomID={roomID}
         />
       ));
   }
@@ -228,6 +211,7 @@ const TARoomView = (props) => {
           setItems={setItems}
           index={index}
           moveCardHandler={moveCardHandler}
+          roomID={roomID}
         />
       ));
   }
@@ -236,14 +220,25 @@ const TARoomView = (props) => {
 
   return (
     <div className="container">
-      <DndProvider backend={HTML5Backend}>
-        <Column title={CURRENTLY_HELPING} className="column currently-helping-column">
-          {returnStudentsBeingHelped()}
-        </Column>
-        <Column title={QUEUE} className="column queue-column">
-          {returnStudentsInQueue()}
-        </Column>
-      </DndProvider>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <h1>
+            CS 3100 - Office Hours
+        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+            <div style={{ color: '#085f05' }}>● Connected</div>
+            <Logout currentData={currentData} setCurrentData={setCurrentData} />
+        </div>
+      </div>
+      <div className='container1'>
+        <DndProvider backend={HTML5Backend}>
+          <Column title={CURRENTLY_HELPING} className="column currently-helping-column">
+            {returnStudentsBeingHelped()}
+          </Column>
+          <Column title={QUEUE} className="column queue-column">
+            {returnStudentsInQueue()}
+          </Column>
+        </DndProvider>  
+      </div>
     </div>
   );
 };

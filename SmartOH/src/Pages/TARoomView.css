@@ -1,9 +1,12 @@
-  
-  p {
-    font-family: DavidLibre, serif;
-  }
-  
+
+
   .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .container1 {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -16,7 +19,7 @@
     margin: 10px;
     border-radius: 10px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    border: 2px solid var(--accent);; /* Параметры границы */
+    border: 2px solid var(--dimAccent);; /* Параметры границы */
     display: flex;
     flex: column;
     justify-content: center;
@@ -24,16 +27,20 @@
   }
   
   .queue-column {
-    background-color: var(--lighter);0;
+    min-width: 30rem;
+    padding: 10px;
+    background-color: var(--medium);
   }
   
   .currently-helping-column {
-    background-color: #fef2e7;
+    min-width: 30rem;
+    padding: 10px;
+    background-color: var(--medium);
   }
   
   .movable-item {
     border-radius: 5px;
-    background-color: #fafdff;
+    background-color: var(--light);
     height: 100px;
     width: 100%;
     margin: 10px auto;

@@ -3,7 +3,6 @@ import Logout from "../Components/Logout"
 
 const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
     const params = useParams()
-    const x = currentData
 
     console.log(params)
 

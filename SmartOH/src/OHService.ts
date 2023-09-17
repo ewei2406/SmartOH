@@ -33,7 +33,11 @@ const moveStudentAsTA = (index: number, roomID: string, studentID: string) => {
     console.log("MOVING " + studentID)
     axios.get(`/api/ta/move?index=${index}&roomID=${roomID}&id=${studentID}`)
 }
+const helpAsTA = (taID: string, roomID: string, studentID: string) => {
+    console.log('HELPING ' + studentID);
+    axios.get(`/api/ta/help?roomID=${roomID}&id=${studentID}&taID=${taID}`)
+}
 
-const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA }
+const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA , helpAsTA}
 
 export {OHService}

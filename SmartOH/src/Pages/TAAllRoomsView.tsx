@@ -1,16 +1,20 @@
 import Logout from "../Components/Logout"
 import RoomCard from "../Components/RoomCard"
 import { OHService } from "../OHService"
+import { useNavigate } from "react-router-dom"
+
+
 
 const TAAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
-
-    const joinRoom = (roomID: string) => {
+    const navigate = useNavigate();
+    const joinRoom = (roomID: string) => {   
         console.log(currentData.id)
         OHService.joinAsTA(currentData.id, roomID)
         setCurrentData({
             ...currentData,
             roomID: roomID
         })
+        navigate('/ta/rooms/' + roomID);
     }
 
     console.log(rooms)
