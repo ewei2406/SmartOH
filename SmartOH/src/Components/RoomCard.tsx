@@ -1,3 +1,5 @@
+import UserIcon from "./UserIcon"
+
 export const RoomCard = ({ disable, joinRoom, name, room, message, subtitle }: any) => {
 
     const getIcon = (letter: string) => <div style={{ borderRadius: 20, border: '5px solid var(--medium)' }}>
@@ -31,13 +33,7 @@ export const RoomCard = ({ disable, joinRoom, name, room, message, subtitle }: a
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontWeight: 800, color: 'var(--light)', width: '50px' }}>TAs</span>
             <div style={{ display: 'flex', gap: -50 }}>
-                {room.TAs.slice(0, 5).map((t: any) => <div style={{
-                    borderRadius: 30, border: '2px solid var(--dark)',
-                    width: 30, height: 30, fontWeight: 800, backgroundColor: 'var(--accent)', filter: `hue-rotate(${(t.charCodeAt(0) * 1230) % 360}deg)`,
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -10
-                }}>
-                    {t.slice(0, 1)}
-                </div>)}
+                {room.TAs.slice(0, 5).map((t: any) => <UserIcon key={t} name={t} size={30}/>)}
                 {room.TAs.length > 5 && <div style={{
                     borderRadius: 30, border: '2px solid var(--dark)', padding: '0 10px',
                     height: 30, fontWeight: 800, backgroundColor: 'var(--medium)',
@@ -50,13 +46,7 @@ export const RoomCard = ({ disable, joinRoom, name, room, message, subtitle }: a
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontWeight: 800, color: 'var(--light)', width: '50px' }}>Queue</span>
             <div style={{ display: 'flex', gap: -50 }}>
-                {room.queue.slice(0, 5).map((t: any) => <div style={{
-                    borderRadius: 30, border: '2px solid var(--dark)',
-                    width: 30, height: 30, fontWeight: 800, backgroundColor: 'var(--accent)', filter: `hue-rotate(${(t.id.charCodeAt(0) * 1230) % 360}deg)`,
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -10
-                }}>
-                    {t.id.slice(0, 1)}
-                </div>)}
+                {room.queue.slice(0, 5).map((t: any) => <UserIcon key={t.id} name={t.id} size={30} />)}
                 {room.queue.length > 5 && <div style={{
                     borderRadius: 30, border: '2px solid var(--dark)', padding: '0 10px',
                     height: 30, fontWeight: 800, backgroundColor: 'var(--medium)',

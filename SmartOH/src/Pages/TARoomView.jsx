@@ -1,14 +1,20 @@
-import React, { useRef, useState , useEffect} from "react";
+import React, { useRef, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { OHService } from "../OHService";
-import Logout from "../Components/Logout";
-import "./TARoomView.css";
 
 const COLUMN_NAMES = {
-  CURRENTLY_HELPING: 'Currently Helping',
-  QUEUE: 'Queue'
+    DO_IT: 'Do it',
+    IN_PROGRESS: 'In Progress',
+    AWAITING_REVIEW: 'Awaiting review',
+    DONE: 'Done',
 }
+
+const tasks = [
+    { id: 1, name: 'Item 1', column: 'Do it' },
+    { id: 2, name: 'Item 2', column: 'Do it' },
+    { id: 3, name: 'Item 3', column: 'Do it' },
+    { id: 4, name: 'Item 4', column: 'Do it' },
+]
 
 const MovableItem = ({
   id,
@@ -37,47 +43,49 @@ const MovableItem = ({
     });   
   };
 
-  const ref = useRef(null);
+    const ref = useRef(null);
 
-  const [, drop] = useDrop({
-    accept: "student",
-    hover(item, monitor) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-      // Get pixels to the top
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-      // Time to actually perform the action
-      moveCardHandler(dragIndex, hoverIndex);
-
-      item.index = hoverIndex;
-    }
-  });
+    const [, drop] = useDrop({
+        accept: "Our first type",
+        hover(item, monitor) {
+            if (!ref.current) {
+                return;
+            }
+            const dragIndex = item.index;
+            const hoverIndex = index;
+            // Don't replace items with themselves
+            if (dragIndex === hoverIndex) {
+                return;
+            }
+            // Determine rectangle on screen
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            // Get vertical middle
+            const hoverMiddleY =
+                (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            // Determine mouse position
+            const clientOffset = monitor.getClientOffset();
+            // Get pixels to the top
+            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+            // Only perform the move when the mouse has crossed half of the items height
+            // When dragging downwards, only move when the cursor is below 50%
+            // When dragging upwards, only move when the cursor is above 50%
+            // Dragging downwards
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+                return;
+            }
+            // Dragging upwards
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                return;
+            }
+            // Time to actually perform the action
+            moveCardHandler(dragIndex, hoverIndex);
+            // Note: we're mutating the monitor item here!
+            // Generally it's better to avoid mutations,
+            // but it's good here for the sake of performance
+            // to avoid expensive index searches.
+            item.index = hoverIndex;
+        }
+    });
 
   const [{ isDragging }, drag] = useDrag({
     item: { index, id, currentColumnName , taID, roomID},
@@ -98,49 +106,63 @@ const MovableItem = ({
     })
   });
 
-  const opacity = isDragging ? 0.4 : 1;
+    const opacity = isDragging ? 0.4 : 1;
 
-  drag(drop(ref));
+    drag(drop(ref));
 
-  return (
-    <div ref={ref} className="movable-item" style={{ opacity }}>
-      {id}
-    </div>
-  );
+    return (
+        <div ref={ref} className="movable-item" style={{ opacity }}>
+            {name}
+        </div>
+    );
 };
 
-const Column = ({ children, className, title}) => {
-  const [{ isOver, canDrop }, drop] = useDrop({
-    accept: "student",
-    drop: () => ({ name: title }),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    }),
-  });
+const Column = ({ children, className, title }) => {
+    const [{ isOver, canDrop }, drop] = useDrop({
+        accept: "Our first type",
+        drop: () => ({ name: title }),
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop()
+        }),
+        // Override monitor.canDrop() function
+        canDrop: (item) => {
+            const { DO_IT, IN_PROGRESS, AWAITING_REVIEW, DONE } = COLUMN_NAMES;
+            const { currentColumnName } = item;
+            return (
+                currentColumnName === title ||
+                (currentColumnName === DO_IT && title === IN_PROGRESS) ||
+                (currentColumnName === IN_PROGRESS &&
+                    (title === DO_IT || title === AWAITING_REVIEW)) ||
+                (currentColumnName === AWAITING_REVIEW &&
+                    (title === IN_PROGRESS || title === DONE)) ||
+                (currentColumnName === DONE && title === AWAITING_REVIEW)
+            );
+        }
+    });
 
-  const getBackgroundColor = () => {
-    if (isOver) {
-      if (canDrop) {
-        return "rgb(188,251,255)";
-      } else if (!canDrop) {
-        return "rgb(255,188,188)";
-      }
-    } else {
-      return "";
-    }
-  };
+    const getBackgroundColor = () => {
+        if (isOver) {
+            if (canDrop) {
+                return "rgb(188,251,255)";
+            } else if (!canDrop) {
+                return "rgb(255,188,188)";
+            }
+        } else {
+            return "";
+        }
+    };
 
-  return (
-    <div
-      ref={drop}
-      className={className}
-      style={{ backgroundColor: getBackgroundColor() }}
-    >
-      <p>{title}</p>
-      {children}
-    </div>
-  );
+    return (
+        <div
+            ref={drop}
+            className={className}
+            style={{ backgroundColor: getBackgroundColor() }}
+        >
+            <p>{title}</p>
+            {children}
+        </div>
+    );
 };
 
 const TARoomView = ({ currentData, setCurrentData, rooms}) => {   
@@ -158,8 +180,8 @@ const TARoomView = ({ currentData, setCurrentData, rooms}) => {
     }
   }
 
-  const moveCardHandler = (dragIndex, hoverIndex) => {
-    const dragStudent = items[dragIndex];
+    const moveCardHandler = (dragIndex, hoverIndex) => {
+        const dragItem = items[dragIndex];
 
     if (dragStudent) {
 
@@ -168,8 +190,8 @@ const TARoomView = ({ currentData, setCurrentData, rooms}) => {
       setItems((prevState) => {
         const coppiedStateArray = [...prevState];
 
-        // remove item by "hoverIndex" and put "dragItem" instead
-        const prevItem = coppiedStateArray.splice(hoverIndex, 1, dragStudent);
+                // remove item by "hoverIndex" and put "dragItem" instead
+                const prevItem = coppiedStateArray.splice(hoverIndex, 1, dragItem);
 
         // remove item by "dragIndex" and put "prevItem" instead
         coppiedStateArray.splice(dragIndex, 1, prevItem[0]);
