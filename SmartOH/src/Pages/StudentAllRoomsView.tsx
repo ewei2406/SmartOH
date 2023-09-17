@@ -6,8 +6,6 @@ import Popup from "../Components/Popup"
 import "./CardScroller.css"
 import { useNavigate } from "react-router-dom"
 
-
-
 const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
 
     const navigate = useNavigate()
@@ -21,9 +19,13 @@ const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
     const joinRoom = () => {
         OHService.joinAsStudent(currentData.id, joiningRoom, question)
         navigate('/student/rooms/'+joiningRoom)
+        setCurrentData({
+            ...currentData,
+            roomID: joiningRoom
+        })
     }
 
-    const popupContent = <div className="card" style={{ padding: 30, boxShadow: '0 0 15px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    const popupContent = <div className="card" style={{ padding: 30, boxShadow: '0 0 15px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 15 }}>
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <div style={{ fontWeight: 800, fontSize: '1.5em' }}>Join "{joiningRoom}"</div>
             <div style={{ color: 'var(--light)' }}>{roomData && roomData.class}</div>
@@ -82,11 +84,13 @@ const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
             </div>
         </div>
 
+        <br />
+
         <textarea style={{ width: 400, height: 200, resize: 'none' }} value={question} onChange={e => setQuestion(e.target.value)} placeholder="Enter Your Question..." />
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            <button style={{ filter: 'hue-rotate(90deg)' }} onClick={() => { setJoiningRoom(""); setShowPopup(false) }}>Cancel</button>
-            <button disabled={!question || question === ""} onClick={e => joinRoom()}>Join</button>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 15 }}>
+            <button style={{ filter: 'hue-rotate(90deg)', width: '50%' }} onClick={() => { setJoiningRoom(""); setShowPopup(false) }}>Cancel</button>
+            <button style={{ width: '50%' }} disabled={!question || question === ""} onClick={e => joinRoom()}>Join</button>
         </div>
     </div>
 

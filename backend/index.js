@@ -181,6 +181,14 @@ app.get('/api/student/join', (req, res) => {
     sendUpdate()
 });
 
+app.get('/api/student/edit', (req, res) => {
+    room = rooms[req.query.roomID]
+    student = room.queue.find(s => s.id === req.query.id)
+    student.question = req.query.question
+    res.send('Updated the question')
+    sendUpdate()
+});
+
 app.get('/api/student/leave', (req, res) => {
     room = rooms[req.query.roomID]
     room.queue = room.queue.filter(s => s.id !== req.query.id)
