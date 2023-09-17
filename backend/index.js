@@ -259,7 +259,7 @@ app.get('/api/ta/putback', (req, res) => {
     console.log('putting back' + req.query.id)
     room = rooms[req.query.roomID]
     student = room.queue.find(s => s.id === req.query.id)
-    student.beginHelpedByID = null
+    student.beginHelpedByID = ''
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
         room.queue.splice(req.query.index, 0, student)
