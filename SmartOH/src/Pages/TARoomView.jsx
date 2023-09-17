@@ -3,6 +3,7 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { OHService } from "../OHService";
 import Logout from "../Components/Logout";
+import Logo from "../Components/Logo";
 import "./TARoomView.css";
 
 const COLUMN_NAMES = {
@@ -33,7 +34,7 @@ const MovableItem = ({
       return prevState.map((e) => {
         return {
           ...e,
-          beginHelpedByID: e.id == currentItem.id ? (e.beginHelpedByID == null ?  taID : null) : e.beginHelpedByID
+          beginHelpedByID: e.id == currentItem.id ? (e.beginHelpedByID === '' ?  taID : null) : e.beginHelpedByID
         };
       });
     });   
@@ -146,14 +147,11 @@ const Column = ({ children, className, title}) => {
 };
 
 const TARoomView = ({ currentData, setCurrentData, rooms}) => { 
-
-  console.log('rerender')
   
   var [roomID, setRoomID] = useState(currentData.roomID);
   var [taID, settaID] = useState(currentData.id);
-  
 
-  if(rooms) {
+  if(rooms && rooms[roomID]) {
     const [items, setItems] = useState(rooms[roomID].queue);
     const studentColumn = (student, taID) => {
       if(student.beginHelpedByID == taID) {
@@ -195,7 +193,7 @@ const TARoomView = ({ currentData, setCurrentData, rooms}) => {
 
     const returnStudentsInQueue = () => {
       return items
-        .filter((student) => student.beginHelpedByID == null)
+        .filter((student) => student.beginHelpedByID === '')
         .map((student, index) => (
           <MovableItem
             key={student.id}
@@ -230,14 +228,13 @@ const TARoomView = ({ currentData, setCurrentData, rooms}) => {
         ));
     }
 
+    
     const { CURRENTLY_HELPING, QUEUE } = COLUMN_NAMES;
 
     return (
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <h1>
-              {`${rooms[currentData.roomID].class} - Office Hours`}
-          </h1>
+          <Logo/>
           <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
               <div style={{ color: '#085f05' }}>● Connected</div>
               <Logout currentData={currentData} setCurrentData={setCurrentData} />
