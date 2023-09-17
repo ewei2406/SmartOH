@@ -5,3 +5,4 @@ deep-learning/__pycache__/util.cpython-39.pyc
 deep-learning/__pycache__/transcribe.cpython-39.pyc
 deep-learning/__pycache__
 deep-learning/data/*.json
+deep-learning/.DS_Store

@@ -9,17 +9,16 @@
 ### The Benefits of Our Approach
 ![benefits](images/benefits.png)
 
-### Our Workflow
+### Our Tech Stack
+![tech](images/tech_stack.png)
+### Our Data Workflow
 ![workflow](images/flowchart.png)
 
+### Functionality for Students
+![join](images/class_student.png)
+![question](images/question.png)
+![queue](images/queue_student.png)
 
-
-
-### TA Office Hours Functionality
-
-
-
-### Student Question Functionality
-![join](images/join_room.png)
-![queue](images/room_queue.png)
-
+### Functionality for TAs
+![class](images/class_ta.png)
+![room](images/room_ta.png)

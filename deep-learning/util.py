@@ -21,6 +21,9 @@ def validate_email(email: str) -> bool:
     
 
 def send_email_with_pdf(email_address: str, pdf_path: str):
+    print("Sending email...")
+    return
+    print("Sending email...")
     SCOPES = [
         "https://www.googleapis.com/auth/gmail.send"
     ]
