@@ -33,21 +33,21 @@ class PDFGenerator:
         except subprocess.CalledProcessError as e:
             return {"message": "Error during LaTeX compilation", "details": str(e)}
         
-        try:
-            completed_process = subprocess.run(["pdflatex", "-output-directory=" + save_path, temp_tex_path], check=True, capture_output=True, text=True)
-            print(completed_process.stdout)
-            print(completed_process.stderr)
+        # try:
+        #     completed_process = subprocess.run(["pdflatex", "-output-directory=" + save_path, temp_tex_path], check=True, capture_output=True, text=True)
+        #     print(completed_process.stdout)
+        #     print(completed_process.stderr)
             
-            return {"message": "PDF compiled and saved successfully"}
+        #     return {"message": "PDF compiled and saved successfully"}
 
-        except subprocess.CalledProcessError as e:
-            print(f"Error output: {e.output}")
-            return {"message": "Error during LaTeX compilation", "details": str(e)}
+        # except subprocess.CalledProcessError as e:
+        #     print(f"Error output: {e.output}")
+        #     return {"message": "Error during LaTeX compilation", "details": str(e)}
     
 
     def run_conversation(self):
         # Step 1: send the conversation and available functions to GPT
-        messages = [{"role": "user", "content": "Your job is to take the transcript of a conversation, then summarize it and format it into a brief latex document capturing the questions and the core of the answers.  YOU MUST INCLUDE BOTH THE QUESTION AND THE ANSWER FOR EACH QUESTION THAT IS ASKED OR TOPIC THAT IS DISCUSSED. Here is the transcript. Make sure you are including the correct packages that can be run. {}".format(self.transcription)}]
+        messages = [{"role": "user", "content": "Your job is to take the transcript of a conversation, then summarize it and format it into a brief latex document capturing the questions and the core of the answers.  YOU MUST INCLUDE BOTH THE QUESTION AND THE ANSWER FOR EACH QUESTION THAT IS ASKED OR TOPIC THAT IS DISCUSSED. You may include knowledge that is not discussed in the latex file. Here is the transcript. Make sure you are including the correct packages that can be run. {}".format(self.transcription)}]
 
         functions = [
             {
