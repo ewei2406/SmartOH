@@ -2,12 +2,18 @@
 
 :root {
     --accent: #A385D6;
-    --dimAccent: #211B31;
+    --dimAccent: #2c2441;
     --darker: #080808;
     --dark: #1E1E1E;
     --medium: #2A2A2A;
     --light: #A4A4A4;
     --lighter: #F0F0F0;
+}
+
+.card {
+    border: 1px solid var(--medium);
+    background-color: var(--dark);
+    border-radius: 10px;
 }
 
 
@@ -29,6 +35,11 @@ button {
     color: var(--accent);
 }
 
+.accentCard {
+    background-color: var(--dimAccent);
+    color: var(--accent);
+}
+
 button:hover {
     cursor: pointer;
     color: var(--accent);
@@ -41,20 +52,21 @@ button:disabled {
     color: var(--medium);
 }
 
-input {
+input, textarea {
     padding: 10px;
+    font-family: 'Inclusive Sans', sans-serif !important;
     border-radius: 10px;
     border: none;
     background-color: var(--medium);
     color: var(--lighter);
 }
 
-input:focus {
+input:focus, textarea:focus {
     background-color: var(--dimAccent);
     color: var(--accent);
     outline: 1px solid var(--accent);
 }
 
-input:focus::placeholder {
+input:focus::placeholder, textarea:focus::placeholder {
     color: var(--accent);
 }

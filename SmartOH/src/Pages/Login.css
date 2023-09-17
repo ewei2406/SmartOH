@@ -17,15 +17,17 @@
 }
 
 .tab.active {
-    border-color: var(--accent);
+    border-color: var(--medium);
     border-bottom-color: var(--dark);
     transform: translateY(1px);
     color: var(--lighter);
+    /* color: #085f05; */
+    background-color: var(--dark);
     /* border-bottom: 1px solid var(--accent); */
 }
 
 .tab.active:hover {
-    border-color: var(--accent);
+    /* border-color: var(--accent); */
     border-bottom-color: var(--dark);
     transform: translateY(1px);
     /* border-bottom: 1px solid var(--accent); */
