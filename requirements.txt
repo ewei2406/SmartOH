@@ -5,7 +5,7 @@ anyio==3.7.1
 async-timeout==4.0.3
 attrs==23.1.0
 blinker==1.6.2
-brotlipy==0.7.0
+# brotlipy==0.7.0
 cachetools==5.3.1
 click==8.1.7
 datasets==2.14.5
