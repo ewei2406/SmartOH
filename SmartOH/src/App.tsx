@@ -14,7 +14,7 @@ import StudentRoomView from './Pages/StudentRoomView';
 const App: React.FC = () => {
 
     const [currentData, setCurrentData] = useState({
-        id: 'Danny',
+        id: 'Carl',
         roomID: 'room A',
         loggedIn: false,
         userType: 'student'

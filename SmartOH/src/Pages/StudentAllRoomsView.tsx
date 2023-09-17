@@ -5,6 +5,7 @@ import { OHService } from "../OHService"
 import Popup from "../Components/Popup"
 import "./CardScroller.css"
 import { useNavigate } from "react-router-dom"
+import UserIcon from "../Components/UserIcon"
 
 const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
 
@@ -35,13 +36,7 @@ const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontWeight: 800, color: 'var(--light)', width: '50px' }}>TAs</span>
             {<div style={{ display: 'flex', gap: -50 }}>
-                {roomData && roomData.TAs.slice(0, 10).map((t: any) => <div style={{
-                    borderRadius: 30, border: '2px solid var(--dark)',
-                    width: 30, height: 30, fontWeight: 800, backgroundColor: 'var(--accent)', filter: `hue-rotate(${(t.charCodeAt(0) * 1230) % 360}deg)`,
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -10
-                }}>
-                    {t.slice(0, 1)}
-                </div>)}
+                {roomData && roomData.TAs.slice(0, 10).map((t: any) => <UserIcon key={t} name={t} size={30} />)}
                 {roomData && roomData.TAs.length > 10 && <div style={{
                     borderRadius: 30, border: '2px solid var(--dark)', padding: '0 10px',
                     height: 30, fontWeight: 800, backgroundColor: 'var(--medium)',
@@ -54,13 +49,7 @@ const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontWeight: 800, color: 'var(--light)', width: '50px' }}>Queue</span>
             <div style={{ display: 'flex', gap: -50 }}>
-                {roomData && roomData.queue.slice(0, 10).map((t: any) => <div style={{
-                    borderRadius: 30, border: '2px solid var(--dark)',
-                    width: 30, height: 30, fontWeight: 800, backgroundColor: 'var(--accent)', filter: `hue-rotate(${(t.id.charCodeAt(0) * 1230) % 360}deg)`,
-                    display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -10
-                }}>
-                    {t.id.slice(0, 1)}
-                </div>)}
+                {roomData && roomData.queue.slice(0, 10).map((t: any) => <UserIcon key={t.id} name={t.id} size={30} />)}
                 {roomData && roomData.queue.length > 10 && <div style={{
                     borderRadius: 30, border: '2px solid var(--dark)', padding: '0 10px',
                     height: 30, fontWeight: 800, backgroundColor: 'var(--medium)',
