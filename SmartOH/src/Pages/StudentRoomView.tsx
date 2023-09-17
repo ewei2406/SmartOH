@@ -5,9 +5,10 @@ import UserIcon from "../Components/UserIcon"
 import { OHService } from "../OHService"
 import Logo from "../Components/Logo"
 import { FaPen } from 'react-icons/fa6'
-import { FaUserGroup, FaClock, FaCircleQuestion } from 'react-icons/fa6'
+import { FaUserGroup, FaClock, FaCircleQuestion, FaBolt } from 'react-icons/fa6'
 import { FaCircleXmark, FaCircleCheck, FaCircleArrowLeft } from 'react-icons/fa6'
 import Popup from "../Components/Popup"
+import { GridLoader } from "react-spinners"
 
 const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
@@ -72,6 +73,17 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
     console.log(helpedById)
     const showPopup = helpedById !== ""
+
+    const [loading, setLoading] = useState(false)
+    const [helpText, setHelpText] = useState("Can't get to a TA fast enough? Get helped by the AI TA!")
+
+    const generate = () => {
+        setLoading(true)
+        OHService.getHelp(question, (data: any) => {
+            setHelpText(data.reply)
+            setLoading(false)
+        })
+    }
     
     return (
         <div style={{ userSelect: 'none', width: 800 }}>
@@ -79,6 +91,7 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                 <Logo/>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
                     <div style={{ color: '#085f05' }}>● Connected</div>
+                    <button onClick={() => leave()} className="withIcon" style={{ filter: 'hue-rotate(135deg)' }}><FaCircleArrowLeft /> Leave Queue</button>
                     <Logout currentData={currentData} setCurrentData={setCurrentData} />
                 </div>
             </div>
@@ -108,7 +121,6 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0px' }}>
                     <h2>
                         <div className="withIcon"> <FaUserGroup/> TAs</div>
-                        <br />
                         <div style={{ display: 'flex', gap: -50, marginTop: '15px', marginLeft: '15px' }}>
                             {TAs.slice(0, 5).map((t: any) => <UserIcon key={t} name={t} size={50} />)}
                             {TAs.length > 5 && <div style={{
@@ -120,13 +132,25 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                         </div>
                     </h2>
 
-                    <h2><div className="withIcon"><FaClock/> Position: <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{myPosition}</span></div>
-                        <br />
-                        <i style={{ color: 'var(--medium)', fontSize: '0.8em' }}>
+                    <h2><div className="withIcon" style={{ marginBottom: 10}}><FaClock/> Position: <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{myPosition}</span></div>
+                        <i style={{ color: 'var(--medium)', fontSize: '0.8em', display: 'flex', alignItems: 'center', gap: 7 }}>
                             Estimated Wait Time is
-                            <span style={{ fontWeight: 800, color: 'var(--accent)' }}> {Math.round(rooms && rooms[currentData.roomID] && (rooms[currentData.roomID].avgStudentTime * (myPosition) / 6) / 10)} min</span>
+                            <span style={{ display: 'flex', alignItems: 'center', fontWeight: 800, color: 'var(--accent)' }}> <FaBolt style={{ display: 'block' }}/> {Math.round(rooms && rooms[currentData.roomID] && (rooms[currentData.roomID].avgStudentTime * (myPosition) / 6) / 10)} min</span>
                         </i>
                     </h2>
+
+                    <div style={{ marginBottom: 20}}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h2 style={{ margin: '10px 0px'}} className="withIcon"><FaBolt /> AI TA</h2>
+                            <button style={{ display: 'flex' }} onClick={() => generate()} >{loading ? <GridLoader color="var(--accent)" size={4} margin={0} speedMultiplier={2} /> : <FaBolt />}</button>
+                        </div>
+                        <div style={{ width: '100%', position: 'relative', color: loading ? 'var(--light)' : 'var(--light)' }}>
+                            <div style={{ filter: loading ? 'blur(5px)' : 'none', fontSize: '1em', display: 'flex', flexDirection: 'column', gap: 4 }}>{helpText.split("\n").map(c => <div>{c}</div>)}</div>
+                            <div className="withIcon" style={{ display: loading ? 'flex' : 'none', justifyContent: 'center', position: 'absolute', color: 'var(--accent)', top: 0, bottom: 0, right: 0, left: 0, margin: 'auto' }}>
+                                <GridLoader color="var(--accent)" size={7} margin={0} speedMultiplier={2} /> Asking the AI TA for help...
+                            </div>
+                        </div>
+                    </div>
 
                     <h2 className="withIcon">
                         <FaCircleQuestion/> Your Question
@@ -144,7 +168,6 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                         {edit && <button style={{ width: '50%' }} disabled={!question || question === ""} onClick={e => saveQuestion()}><div className="withIcon center"><FaCircleCheck/>Save</div></button>}
                     </div>
                     <br />
-                    <div><button style={{ filter: 'hue-rotate(90deg)', width: '100%' }} onClick={e => leave()}><div className="withIcon center"><FaCircleArrowLeft />Leave Queue</div></button></div>
                 </div>
             </div>
                 <Popup showPopup={showPopup} content={

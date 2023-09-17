@@ -47,57 +47,30 @@ We utilize a robust tech stack to ensure scalability and performance.
 
 ![workflow](images/flowchart.png)
 
-Our data workflow guarantees data integrity and seamless experience for both TAs and students.
-
----
-
-## Functionality
-
+![login](images/login.png)
+Login Splash. A tab is used to select if you are a TA or a student!
 ### Functionality for Students
+![join](images/class_student.png)
+The student landing page shows live previews of the status of each Office Hour room, along with AI-powered predictions for wait times.
 
-![join](images/student_rooms.png)
-![question](images/student_question.png)
-![queue](images/student_queue.png)
+![join_filter](images/join_filters.png)
+Students can also easily filter their office hours by class!
 
-Students can easily join rooms, ask questions, and see their queue status.
+![question](images/question.png)
+To join the Queue, a student must enter their question.
 
----
+![queue](images/queue_student.png)
+A student can view relevant data while waiting in the queue, such as their position, wait time, and who the TAs and other students are.
+
+
+![AIhelp](images/ai_help_1.png)
+If a TA isn't available, ask the AI TA for help!
+
+![AIhelp](images/ai_help_2.png)
+The AI TA isn't a full substitute for a real TA, but it can definitely make a TA's life easier by explaining basic concepts.
 
 ### Functionality for TAs
+![class](images/class_ta.png)
+The TA landing page is similar, except that TAs do not join the Queue nor need to ask questions.
 
-![class](images/ta_rooms.png)
-![room](images/ta_queue.png)
-
-TAs can manage multiple rooms and see all queued questions easily.
-
----
-
-## Installation and Running
-
-Make sure you have the latest version of [Node.js](https://nodejs.org/en/) installed. You will need [npm](https://www.npmjs.com/) to install the dependencies and run the app.
-We also recommend using a Python virtual environment to run the AI microservices.
-
-Here are the steps to get the app up and running:
-
-```bash
-# Clone the repository
-git clone https://github.com/ewei2406/SmartOH.git
-
-# Navigate into the directory
-cd SmartOH
-
-# Start SmartOH!
-./run.sh
-```
-
----
-
-## Usage
-
-Explain here how users can take advantage of the features of SmartOH.
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+<!-- ![room](images/room_ta.png) -->

@@ -229,10 +229,31 @@ const postData = {
     ]
 }
 
-app.post('/api/ml/summarize', async (req, res) => {
-    console.log("123")
+app.get('/api/ml/summarize', async (req, res) => {
+    room = rooms[req.query.roomID]
+
+    console.log("SUMMARIZING")
+    const postData = {
+        questions: []
+    }
+
+    room.queue.forEach(s => postData.questions.push(s.question))
+
     axios.post('http://localhost:8000/current-topic', postData).then(result => {
-        res.json(result.data.current_topic)
+        res.json(result.data)
+        console.log(result.data)
+    })
+})
+
+app.get('/api/ml/help', async (req, res) => {
+    console.log("HELPING")
+    const postData = {
+        question: req.query.question
+    }
+
+    axios.post('http://localhost:8000/help', postData).then(result => {
+        res.json(result.data)
+        console.log(result.data)
     })
 });
 

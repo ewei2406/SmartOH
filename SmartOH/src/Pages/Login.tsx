@@ -23,11 +23,11 @@ const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any,
     const leftActive = currentData.userType === 'student'
 
     return (
-        <div style={{ marginTop: 250, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <h1>Login to Smart<span style={{ color: 'var(--accent)' }}>OH</span></h1>
+        <div style={{ marginTop: 90, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <h1 style={{ fontSize: '5em', margin: '30px 0' }}>Smart<span style={{ color: 'var(--accent)' }}>OH</span></h1>
             
-            <div style={{ fontSize: '3em', marginBottom: 25 }}>🎓🕙</div>
-
+            <br /><br /><br />
+            <br />
             <div>
 
                 <div style={{ display: 'flex' }}>
@@ -61,7 +61,7 @@ const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any,
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     /> */}
-                    <button style={{ marginTop: '20px', display: 'flex', gap: 5, justifyContent: 'center', alignItems: 'center' }} onClick={handleLogin} disabled={currentData.id === '' || !currentData.id}><FaCircleArrowRight/> Login</button>
+                    <button style={{ marginTop: '10px', display: 'flex', gap: 5, justifyContent: 'center', alignItems: 'center' }} onClick={handleLogin} disabled={currentData.id === '' || !currentData.id}><FaCircleArrowRight/> Login</button>
                 </div>
             </div>
         </div>

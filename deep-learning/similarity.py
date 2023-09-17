@@ -21,6 +21,50 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
 
+def get_help_question(question):
+
+    messages = [ {"role": "system", "content": 
+                "You are a teaching assistant for the course."} ]
+
+    prompts = [
+        f"A student is asking you for help with the following question: {question}. What are 3 steps one can take to effectively help the student and explain the concepts to them without immediately giving away the answer?",
+        "Provie 3 sentences that would help the student most following the steps."
+    ]
+    for i in range(2):
+        message = prompts[i]
+
+        if message:
+            messages.append(
+                {"role": "user", "content": message},
+            )
+            chat = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", messages=messages
+            )
+        reply = chat.choices[0].message.content
+        print(f"ChatGPT: {reply}")
+        if i == 1:
+            return reply
+        messages.append({"role": "assistant", "content": reply})
+
+    return reply
+
+
+class HelpInput(BaseModel):
+    question: str
+
+@app.post("/help")
+def calculate_similarity(data: HelpInput):
+    
+    question = data.question
+
+    if not question:
+        raise HTTPException(status_code=400, detail="Missing question")
+
+    try:
+        reply = get_help_question(question)
+        return {"reply": reply}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 def calc_similarity_function(target_string: str, string_list: list[str]):
     # Compute embeddings for both lists

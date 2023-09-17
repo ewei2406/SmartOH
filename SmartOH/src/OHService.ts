@@ -52,11 +52,16 @@ const putbackStudent = (studentID: string, roomID: string, index: number) => {
 }
 const getSimilarities = (request: any) => {
 
-    return axios.post('/api/ml/similarity', { request })
+const getSummary = (roomID: string, onFinish: any) => {
+    console.log("Summary")
+    axios.get(`/api/ml/summarize?roomID=${roomID}`).then(res => onFinish(res.data))
 }
 
+const getHelp = (question: string, onFinish: any) => {
+    console.log("Question")
+    axios.get(`/api/ml/help?question=${encodeURIComponent(question)}`).then(res => onFinish(res.data))
+}
 
-
-const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA, updateQuestion , helpAsTA, putbackStudent, getSimilarities}
+const OHService = { getHelp, subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA, updateQuestion , helpAsTA, putbackStudent, getSummary }
 
 export {OHService}
