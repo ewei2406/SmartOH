@@ -8,8 +8,9 @@ from sentence_transformers import SentenceTransformer, util
 from util import validate_email, send_email_with_pdf
 from transcribe import AI
 import glob
+from generate_pdf import PDFGenerator
 
-file_paths = glob.glob('./data/*.m4a')
+file_paths = glob.glob('./data/**/*.m4a', recursive=True)
 
 # Load environment variables
 load_dotenv()
@@ -138,10 +139,12 @@ def send_report(data: EmailInput):
             ai = AI(file_path, './data/sa_speech.json')
             transcription_result = ai.transcribe()
             print(f'Transcription for {file_path}: {transcription_result}')
-        
-            # generate_report(transcription_result)
+            pdf_generator = PDFGenerator(transcription_result)
+            pdf_generator.run_conversation()
 
-            send_email_with_pdf(student_email, "./data/report.pdf")
+            # pdf is created in /deep-learning/temp.pdf
+        
+            # send_email_with_pdf(student_email, "./data/report.pdf")
         return {"message": "Report sent successfully to " + student_email}
 
     except Exception as e:
