@@ -178,6 +178,7 @@ app.get('/api/student/join', (req, res) => {
     room = rooms[req.query.roomID]
     room.queue.push(new Student(req.query.id, req.query.question))
     res.send('Joined the queue')
+    console.log("SOMEONE JOINED THE QUEUE")
     sendUpdate()
 });
 

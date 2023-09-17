@@ -1,0 +1,20 @@
+.tooltip {
+    display: none;
+    position: absolute;
+    top: -75%;
+    z-index: 9999;
+    border: 1px solid var(--medium);
+    padding: 5px;
+    font-size: 0.7em;
+    border-radius: 10px;
+    background-color: var(--dark);
+    transition: 0.1s linear;
+}
+
+.userIcon:hover .tooltip {
+    display: block;
+}
+
+.userIcon {
+    position: relative;
+}

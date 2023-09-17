@@ -5,52 +5,68 @@ anyio==3.7.1
 async-timeout==4.0.3
 attrs==23.1.0
 blinker==1.6.2
-brotlipy==0.7.0
-certifi @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_3bweqb8byn/croot/certifi_1690232244779/work/certifi
-cffi @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_ab19r4bji3/croot/cffi_1670423206034/work
-charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
+# brotlipy==0.7.0
+cachetools==5.3.1
 click==8.1.7
-cryptography @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_905z2r5rpq/croot/cryptography_1694211573866/work
+datasets==2.14.5
+decorator==4.4.2
+dill==0.3.7
 exceptiongroup==1.1.3
 fastapi==0.103.1
-filelock @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_20tv0lrp8x/croot/filelock_1672387134240/work
 Flask==2.3.3
 frozenlist==1.4.0
-fsspec==2023.9.1
-gmpy2 @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/croot-muov7gw1/gmpy2_1645462616268/work
+fsspec==2023.6.0
+google-api-core==2.11.1
+google-api-python-client==2.99.0
+google-auth==2.23.0
+google-auth-httplib2==0.1.1
+google-auth-oauthlib==1.1.0
+google-cloud-speech==2.21.0
+googleapis-common-protos==1.60.0
+grpcio==1.58.0
+grpcio-status==1.58.0
 h11==0.14.0
+httplib2==0.22.0
 huggingface-hub==0.17.1
-idna @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_771olrhiqw/croot/idna_1666125579282/work
+imageio==2.31.3
+imageio-ffmpeg==0.4.9
 importlib-metadata==6.8.0
 itsdangerous==2.1.2
-Jinja2 @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_9fjgzv9ant/croot/jinja2_1666908141308/work
 joblib==1.3.2
-MarkupSafe @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_12c133f5-0720-4727-9c18-599a3af825723lzwham3/croots/recipe/markupsafe_1654597866058/work
-mpmath @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_17iu6a8a3m/croot/mpmath_1690848269369/work
+moviepy==1.0.3
 multidict==6.0.4
-networkx @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_b9af3smw_7/croot/networkx_1690562010704/work
+multiprocess==0.70.15
 nltk==3.8.1
-numpy @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_a19y8c22jc/croot/numpy_and_numpy_base_1691091616945/work
+oauthlib==3.2.2
 openai==0.28.0
 packaging==23.1
+pandas==2.1.0
 Pillow==9.4.0
-pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+proglog==0.1.10
+proto-plus==1.22.3
+protobuf==4.24.3
+pyarrow==13.0.0
+pyasn1==0.5.0
+pyasn1-modules==0.3.0
 pydantic==2.3.0
 pydantic_core==2.6.3
-pyOpenSSL @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_b8whqav6qm/croot/pyopenssl_1690223428943/work
-PySocks @ file:///Users/ktietz/Code/oss/ci_pkgs/pysocks_1626781349491/work
+pydub==0.25.1
+pyparsing==3.1.1
+python-dateutil==2.8.2
 python-dotenv==1.0.0
+pytz==2023.3.post1
 PyYAML==6.0.1
 regex==2023.8.8
-requests @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_54zi68h2nb/croot/requests_1690400233316/work
+requests-oauthlib==1.3.1
+rsa==4.9
 safetensors==0.3.3
 scikit-learn==1.3.0
 scipy==1.11.2
 sentence-transformers==2.2.2
 sentencepiece==0.1.99
+six==1.16.0
 sniffio==1.3.0
 starlette==0.27.0
-sympy @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_21kpmugwgm/croot/sympy_1668202392692/work
 threadpoolctl==3.2.0
 tokenizers==0.13.3
 torch==2.0.1
@@ -58,9 +74,10 @@ torchaudio==2.0.2
 torchvision==0.15.2
 tqdm==4.66.1
 transformers==4.33.2
-typing_extensions @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_1fdywrbp_3/croot/typing_extensions_1690297474455/work
-urllib3 @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_e9usuw__8i/croot/urllib3_1686166332689/work
+tzdata==2023.3
+uritemplate==4.1.1
 uvicorn==0.23.2
 Werkzeug==2.3.7
+xxhash==3.3.0
 yarl==1.9.2
 zipp==3.16.2

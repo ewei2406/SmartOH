@@ -17,7 +17,7 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
     let queue = []
     if (rooms && rooms[currentData.roomID]) {
-        queue = rooms[currentData.roomID].queue
+        queue = rooms[currentData.roomID].queue.filter((s: any) => s.beginHelpedByID === null)
     }
 
     console.log(queue)
@@ -43,6 +43,8 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
         loadQuestion()
     }, [rooms])
 
+    const myPosition = queue.findIndex((s: any) => s.id === currentData.id) + 1 
+
     return (
         <div style={{ userSelect: 'none', width: 800 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -62,7 +64,7 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                         <br />
                         <i style={{ color: 'var(--medium)', fontSize: '0.8em' }}>{rooms && rooms[currentData.roomID] && rooms[currentData.roomID].class}</i>
                     </h2>
-                    {queue.map((q: any, i: number) => <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                    {queue.map((q: any, i: number) => <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                             <span style={{ color: 'var(--light)', fontWeight: 800, width: 30, textAlign: 'right' }}>{i + 1}.</span>
                             <div className="card" style={{ padding: 15, display: 'flex', gap: 10, alignItems: 'center', flexGrow: 0, width: 320, 
                                 borderColor: q.id === currentData.id ? 'var(--accent)' : 'var(--medium)',
@@ -92,11 +94,11 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                         </div>
                     </h2>
 
-                    <h2>Position: <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{queue.findIndex((s: any) => s.id === currentData.id) + 1}</span>
+                    <h2>Position: <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{myPosition}</span>
                         <br />
                         <i style={{ color: 'var(--medium)', fontSize: '0.8em' }}>
                             Estimated Wait Time is
-                            <span style={{ fontWeight: 800, color: 'var(--accent)' }}> {Math.round(rooms && (rooms[currentData.roomID].avgStudentTime * rooms[currentData.roomID].queue.length / 6) / 10)} min</span>
+                            <span style={{ fontWeight: 800, color: 'var(--accent)' }}> {Math.round(rooms && (rooms[currentData.roomID].avgStudentTime * (myPosition) / 6) / 10)} min</span>
                         </i>
                     </h2>
 
@@ -105,7 +107,7 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                     </h2>
 
                     <textarea 
-                        style={{ width: '100%', boxSizing: 'border-box', height: 200, resize: 'none', marginBottom: 15 }}
+                        style={{ width: '100%', boxSizing: 'border-box', height: 200, resize: 'none', marginBottom: 15, backgroundColor: 'var(--dark)' }}
                         disabled={!edit}
                         ref={textRef}
                         value={question} onChange={e => setQuestion(e.target.value)} placeholder="Enter Your Question..." />

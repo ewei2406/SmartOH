@@ -12,9 +12,9 @@ const sendRequest = (request: string) => {
 
 const joinAsStudent = (
     studentID: string, roomID: string, question: string) => {
-
+    console.log("HERE")
     sendRequest(
-        `/api/student/join?id=${studentID}&question=${question}&roomID=${roomID}`)
+        `/api/student/join?id=${studentID}&question=${encodeURIComponent(question)}&roomID=${roomID}`)
 }
 
 const leaveAsStudent = (studentID: string, roomID: string) => {

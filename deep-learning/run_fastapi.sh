@@ -1,0 +1,1 @@
+uvicorn similarity:app --reload
