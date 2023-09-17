@@ -6,6 +6,9 @@ import Popup from "../Components/Popup"
 import "./CardScroller.css"
 import { useNavigate } from "react-router-dom"
 import UserIcon from "../Components/UserIcon"
+import Logo from "../Components/Logo"
+
+import { FaCircleXmark, FaCircleCheck } from 'react-icons/fa6'
 
 const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
 
@@ -19,7 +22,7 @@ const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
 
     const joinRoom = () => {
         OHService.joinAsStudent(currentData.id, joiningRoom, question)
-        navigate('/student/rooms/'+joiningRoom)
+        navigate('/student/rooms/' + joiningRoom)
         setCurrentData({
             ...currentData,
             roomID: joiningRoom
@@ -78,8 +81,8 @@ const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
         <textarea style={{ width: 400, height: 200, resize: 'none' }} value={question} onChange={e => setQuestion(e.target.value)} placeholder="Enter Your Question..." />
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: 15 }}>
-            <button style={{ filter: 'hue-rotate(90deg)', width: '50%' }} onClick={() => { setJoiningRoom(""); setShowPopup(false) }}>Cancel</button>
-            <button style={{ width: '50%' }} disabled={!question || question === ""} onClick={e => joinRoom()}>Join</button>
+            <button style={{ filter: 'hue-rotate(90deg)', width: '50%' }} onClick={() => { setJoiningRoom(""); setShowPopup(false) }}><div className="withIcon center"><FaCircleXmark/> Cancel</div></button>
+            <button style={{ width: '50%' }} disabled={!question || question === ""} onClick={e => joinRoom()}><div className="withIcon center"><FaCircleCheck/> Join</div></button>
         </div>
     </div>
 
@@ -98,32 +101,35 @@ const StudentAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
     }
 
     return <div style={{ userSelect: 'none' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1>
-                Hi, {currentData.id || "unknown"}!
-            </h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative' }}>
+            
+            <Logo />
+
             <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
                 <div style={{ color: '#085f05' }}>● Connected</div>
                 <Logout currentData={currentData} setCurrentData={setCurrentData} />
             </div>
         </div>
+        <h1>
+            👋 Hi, {currentData.id || "unknown"}!
+        </h1>
 
         <div>
             <h2>
                 Your Classes
             </h2>
             <div style={{ display: 'flex', gap: 10 }}>
-                {["MATH 1", "MATH 2", "MATH 3", "MATH 4"].map((m: string, i: number) => <div 
-                    className="card" key={m} 
-                    style={{ 
-                        padding: 10, cursor: 'pointer', 
+                {["CS 1000", "CS 2000", "CS 9999"].map((m: string, i: number) => <div
+                    className="card" key={m}
+                    style={{
+                        padding: 10, cursor: 'pointer',
                         borderColor: filter.includes(m) ? 'var(--accent)' : 'var(--medium)',
                         color: filter.includes(m) ? 'var(--accent)' : 'inherit',
-                        backgroundColor: filter.includes(m) ? 'var(--dimAccent)' : 'var(--dark)', 
-                    }} 
+                        backgroundColor: filter.includes(m) ? 'var(--dimAccent)' : 'var(--dark)',
+                    }}
                     onClick={e => toggleFilter(m)}
-                    >
-                    
+                >
+
                     {m} <br /> <span style={{ color: 'var(--light)', fontSize: '0.75em' }}>Section 00{((i + 3) % 3) + 1}</span>
                 </div>)}
             </div>

@@ -42,7 +42,15 @@ const moveStudentAsTA = (index: number, roomID: string, studentID: string) => {
     
     sendRequest(`/api/ta/move?index=${index}&roomID=${roomID}&id=${studentID}`)
 }
+const helpAsTA = (taID: string, roomID: string, studentID: string) => {
+    console.log('HELPING ' + studentID);
+    axios.get(`/api/ta/help?roomID=${roomID}&id=${studentID}&taID=${taID}`)
+}
+const putbackStudent = (studentID: string, roomID: string, index: number) => {
+    console.log('PUTTING BACK ' + studentID);
+    axios.get(`/api/ta/putback?roomID=${roomID}&id=${studentID}&index=${index}`)
+}
 
-const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA, updateQuestion }
+const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA, updateQuestion , helpAsTA, putbackStudent}
 
 export {OHService}

@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const axios = require('axios')
 
 const io = require("socket.io")(server, {
     cors: {
@@ -26,113 +27,98 @@ class TA {
 }
 
 rooms = {
-    'room A': {   
-        class: "MATH 1",
+    'OH in room A123': {
+        class: "CS 1000",
         description: "Office hours in the engineering building basement",
         isActive: true,
         avgStudentTime: 324,
         'queue': [
             {
-                id: "Carl",
+                id: "Carl Y",
                 timestamp: new Date(),
-                question: "I dont know 1+1",
+                question: "How to print in python?",
                 beginHelpedByID: null
             },
             {
-                id: "Danny",
+                id: "Danny X",
                 timestamp: new Date(),
-                question: "I dont know 2+2",
+                question: "How to get input in python",
                 beginHelpedByID: null
             },
             {
-                id: "E",
+                id: "Edgar P",
                 timestamp: new Date(),
-                question: "I dont know 2+2",
+                question: "Get user input",
                 beginHelpedByID: null
             },
             {
-                id: "F",
+                id: "Frank S",
                 timestamp: new Date(),
-                question: "I dont know 2+2",
+                question: "How to install python",
                 beginHelpedByID: null
             },
             {
-                id: "G",
+                id: "Garry G",
                 timestamp: new Date(),
-                question: "I dont know 2+2",
+                question: "Install python on windows",
                 beginHelpedByID: null
             },
             {
-                id: "H",
+                id: "Harry L",
                 timestamp: new Date(),
-                question: "I dont know 2+2",
+                question: "How to run python program",
                 beginHelpedByID: null
             }
         ],
-        'TAs': ['Alice', 'Bob']
+        'TAs': ['Alice C', 'Bob P']
     },
-    'room B': {
-        class: "MATH 2",
+    'HW Checkoff OH': {
+        class: "CS 2000",
         description: "Office hours in the engineering building attic",
         isActive: true,
         avgStudentTime: 624,
         'queue': [
             {
-                id: "Ginny",
+                id: "Ginny G",
                 timestamp: new Date(),
-                question: "I dont know 5+5",
+                question: "Memorization help for drainage homework",
                 beginHelpedByID: null
             },
             {
-                id: "Hank",
+                id: "Hank L",
                 timestamp: new Date(),
-                question: "I dont know 6+6",
+                question: "What is Djikstras and how to implement",
+                beginHelpedByID: null
+            },
+            {
+                id: "Ian I",
+                timestamp: new Date(),
+                question: "How do you find the shortest path in a weighted graph?",
                 beginHelpedByID: null
             }
         ],
-        'TAs': ['Eric', 'Frank']
+        'TAs': ['Janice P', 'Kim P']
     },
-    'room C': {
-        class: "MATH 3",
-        description: "Office hours in the engineering building attic",
+    'Confusing OH': {
+        class: "CS 9999",
+        description: "Office hours in the engineering building hidden room",
         isActive: true,
         avgStudentTime: 482,
         'queue': [
             {
-                id: "Ginny",
+                id: "Ginny Z",
                 timestamp: new Date(),
-                question: "I dont know 5+5",
+                question: "I solved P=NP help me verify my answer",
                 beginHelpedByID: null
             },
             {
-                id: "Hank",
+                id: "Hank X",
                 timestamp: new Date(),
-                question: "I dont know 6+6",
+                question: "Last step for turing-complete plants",
                 beginHelpedByID: null
             }
         ],
-        'TAs': ['Eric', 'Frank']
-    },
-    'room D': {
-        class: "MATH 4",
-        description: "Office hours in the engineering building attic",
-        isActive: true,
-        avgStudentTime: 138,
-        'queue': [
-            {
-                id: "Ginny",
-                timestamp: new Date(),
-                question: "I dont know 5+5",
-                beginHelpedByID: null
-            },
-            {
-                id: "Hank",
-                timestamp: new Date(),
-                question: "I dont know 6+6",
-                beginHelpedByID: null
-            }
-        ],
-        'TAs': ['Eric', 'Frank']
+        'TAs': ['Petra K', 'Frank Q']
     },
 }
 
@@ -160,6 +146,21 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+const postData = {
+    questions: [
+        "How does bubble sort work?",
+        "What is dynamic programming?",
+        "How do you find the shortest path in a weighted graph?"
+    ]
+}
+
+app.post('/api/ml/summarize', async (req, res) => {
+    console.log("123")
+    axios.post('http://localhost:8000/current-topic', postData).then(result => {
+        res.json(result.data.current_topic)
+    })
+})
+
 app.get('/api/rooms/create', (req, res) => {
     if (req.query.roomID in rooms) {
         return res.send("failed to create the room")
@@ -170,7 +171,7 @@ app.get('/api/rooms/create', (req, res) => {
         queue: [],
         TAs: []
     }
-    
+
     res.send("created the room")
 })
 
@@ -219,12 +220,16 @@ app.get('/api/ta/leave', (req, res) => {
 app.get('/api/ta/move', (req, res) => {
     room = rooms[req.query.roomID]
 
+    
+
     student = room.queue.find(s => s.id === req.query.id)
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
         room.queue.splice(req.query.index, 0, student)
+        console.log('moving someone')
         res.send("Moved the student")
     } else {
+        console.log('failed to move someone')
         res.send("Failed to move the student")
     }
     sendUpdate()
@@ -233,22 +238,23 @@ app.get('/api/ta/move', (req, res) => {
 app.get('/api/ta/kick', (req, res) => {
     room = rooms[req.query.roomID]
     room.queue = room.queue.filter(s => s.id !== req.query.id)
-    res.send("Kicked student "+ req.params.id)
+    res.send("Kicked student " + req.params.id)
     sendUpdate()
 })
 
 app.get('/api/ta/help', (req, res) => {
     room = rooms[req.query.roomID]
     s = room.queue.find(s => s.id === req.query.id)
-    s.helpedBy = req.query.taID
+    s.beginHelpedByID = req.query.taID
     res.send(`Ta ${req.query.taID} is now helping ${req.query.id}`)
     sendUpdate()
 })
 
 app.get('/api/ta/putback', (req, res) => {
+    console.log('putting back' + req.query.id)
     room = rooms[req.query.roomID]
     student = room.queue.find(s => s.id === req.query.id)
-    student.helpedBy = null
+    student.beginHelpedByID = null
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
         room.queue.splice(req.query.index, 0, student)
