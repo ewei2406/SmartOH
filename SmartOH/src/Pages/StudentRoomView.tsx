@@ -7,6 +7,7 @@ import Logo from "../Components/Logo"
 import { FaPen } from 'react-icons/fa6'
 import { FaUserGroup, FaClock, FaCircleQuestion } from 'react-icons/fa6'
 import { FaCircleXmark, FaCircleCheck, FaCircleArrowLeft } from 'react-icons/fa6'
+import Popup from "../Components/Popup"
 
 const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
@@ -15,13 +16,14 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
     const textRef = useRef(null)
     const [question, setQuestion] = useState("")
     const [edit, setEdit] = useState(false)
+
     const params = useParams()
 
     console.log(currentData, rooms)
 
     let queue = []
     if (rooms && rooms[currentData.roomID]) {
-        queue = rooms[currentData.roomID].queue.filter((s: any) => s.beginHelpedByID === null)
+        queue = rooms[currentData.roomID].queue.filter((s: any) => s.beginHelpedByID === "")
     }
 
     console.log(queue)
@@ -55,6 +57,18 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
         navigate('/student/rooms')
     }
 
+    const rejoin = () => {
+        OHService.moveStudentAsTA(-1, currentData.roomID, currentData.id, true)
+    }
+
+    const helpedById = rooms &&
+        rooms[currentData.roomID] &&
+        rooms[currentData.roomID].queue.find((p: any) => p.id === currentData.id) &&
+        rooms[currentData.roomID].queue.find((p: any) => p.id === currentData.id).beginHelpedByID
+
+    console.log(helpedById)
+    const showPopup = helpedById !== ""
+    
     return (
         <div style={{ userSelect: 'none', width: 800 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -129,6 +143,17 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                     <div><button style={{ filter: 'hue-rotate(90deg)', width: '100%' }} onClick={e => leave()}><div className="withIcon center"><FaCircleArrowLeft />Leave Queue</div></button></div>
                 </div>
             </div>
+                <Popup showPopup={showPopup} content={
+                    <div className="card" style={{ padding: '35px' }}>
+                        <div style={{ fontSize: '2em', fontWeight: 800, textAlign: 'center' }}>You are being helped by <br /> {helpedById || "Someone"}</div>
+                        <br /> <br />
+                        <div style={{display: 'flex', gap: 20 }}>
+                        <div style={{ width: '50%' }}><button style={{ filter: 'hue-rotate(45deg)', width: '100%' }} onClick={e => leave()}><div className="withIcon center"><FaCircleArrowLeft />All done!</div></button></div>
+                        <div style={{ width: '50%' }}><button style={{ filter: 'hue-rotate(90deg)', width: '100%' }} onClick={e => rejoin()}><div className="withIcon center"><FaCircleArrowLeft />Rejoin Queue</div></button></div>
+                        </div>
+                
+                    </div>
+                }/>
         </div>
     )
 }

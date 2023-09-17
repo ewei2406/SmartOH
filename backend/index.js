@@ -16,7 +16,7 @@ class Student {
         this.id = id;
         this.timestamp = new Date();
         this.question = question;
-        this.beginHelpedByID = null;
+        this.beginHelpedByID = "";
     }
 }
 
@@ -34,40 +34,40 @@ rooms = {
         avgStudentTime: 324,
         'queue': [
             {
-                id: "Carl Y",
+                id: "Alice",
                 timestamp: new Date(),
                 question: "How to print in python?",
-                beginHelpedByID: null
+                beginHelpedByID: 'joe bob'
             },
             {
                 id: "Danny X",
                 timestamp: new Date(),
                 question: "How to get input in python",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             },
             {
                 id: "Edgar P",
                 timestamp: new Date(),
                 question: "Get user input",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             },
             {
                 id: "Frank S",
                 timestamp: new Date(),
                 question: "How to install python",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             },
             {
                 id: "Garry G",
                 timestamp: new Date(),
                 question: "Install python on windows",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             },
             {
                 id: "Harry L",
                 timestamp: new Date(),
                 question: "How to run python program",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             }
         ],
         'TAs': ['Alice C', 'Bob P']
@@ -82,19 +82,19 @@ rooms = {
                 id: "Ginny G",
                 timestamp: new Date(),
                 question: "Memorization help for drainage homework",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             },
             {
                 id: "Hank L",
                 timestamp: new Date(),
                 question: "What is Djikstras and how to implement",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             },
             {
                 id: "Ian I",
                 timestamp: new Date(),
                 question: "How do you find the shortest path in a weighted graph?",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             }
         ],
         'TAs': ['Janice P', 'Kim P']
@@ -109,13 +109,13 @@ rooms = {
                 id: "Ginny Z",
                 timestamp: new Date(),
                 question: "I solved P=NP help me verify my answer",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             },
             {
                 id: "Hank X",
                 timestamp: new Date(),
                 question: "Last step for turing-complete plants",
-                beginHelpedByID: null
+                beginHelpedByID: ""
             }
         ],
         'TAs': ['Petra K', 'Frank Q']
@@ -219,13 +219,17 @@ app.get('/api/ta/leave', (req, res) => {
 
 app.get('/api/ta/move', (req, res) => {
     room = rooms[req.query.roomID]
-
-    
-
     student = room.queue.find(s => s.id === req.query.id)
     if (student) {
         room.queue = room.queue.filter(s => s.id !== student.id)
-        room.queue.splice(req.query.index, 0, student)
+        if (req.query.unhelp) {
+            student.beginHelpedByID = ""
+        }
+        if (req.query.index === -1) {
+            req.query.index.push(student)
+        } else {
+            room.queue.splice(req.query.index, 0, student)
+        }
         console.log('moving someone')
         res.send("Moved the student")
     } else {

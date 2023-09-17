@@ -37,10 +37,10 @@ const leaveAsTA = (taID: string, roomID: string) => {
     sendRequest(`/api/ta/leave?id=${taID}&roomID=${roomID}`)
 }
 
-const moveStudentAsTA = (index: number, roomID: string, studentID: string) => {
+const moveStudentAsTA = (index: number, roomID: string, studentID: string, unhelp: boolean = false) => {
     console.log("MOVING " + studentID)
     
-    sendRequest(`/api/ta/move?index=${index}&roomID=${roomID}&id=${studentID}`)
+    sendRequest(`/api/ta/move?index=${index}&roomID=${roomID}&id=${studentID}&unhelp=${unhelp}`)
 }
 const helpAsTA = (taID: string, roomID: string, studentID: string) => {
     console.log('HELPING ' + studentID);

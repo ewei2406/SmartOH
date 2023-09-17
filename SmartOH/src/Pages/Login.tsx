@@ -48,18 +48,19 @@ const Login = ({ currentData, setCurrentData, handleLogin }: { currentData: any,
                 }}>
                     <input
                         type="text"
+                        style={{ width: 250 }}
                         placeholder="Username"
                         value={currentData.id || ""}
                         onChange={(e) => setName(e.target.value)}
                     />
 
-                    <input
+                    {/* <input
                         style={{ width: 250 }}
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                    />
+                    /> */}
                     <button style={{ marginTop: '20px', display: 'flex', gap: 5, justifyContent: 'center', alignItems: 'center' }} onClick={handleLogin} disabled={currentData.id === '' || !currentData.id}><FaCircleArrowRight/> Login</button>
                 </div>
             </div>
