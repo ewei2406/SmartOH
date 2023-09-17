@@ -2,11 +2,14 @@
     display: none;
     position: absolute;
     top: -75%;
+    width: 100%;
     z-index: 9999;
     border: 1px solid var(--medium);
     padding: 5px;
     font-size: 0.7em;
     border-radius: 10px;
+    white-space: nowrap;
+    margin: 0 auto;
     background-color: var(--dark);
     transition: 0.1s linear;
 }
@@ -17,4 +20,8 @@
 
 .userIcon {
     position: relative;
+}
+
+.userIcon:hover {
+    transform: scale(1.1);
 }

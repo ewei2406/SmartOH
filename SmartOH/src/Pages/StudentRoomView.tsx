@@ -1,8 +1,12 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Logout from "../Components/Logout"
 import { useEffect, useRef, useState } from "react"
 import UserIcon from "../Components/UserIcon"
 import { OHService } from "../OHService"
+import Logo from "../Components/Logo"
+import { FaPen } from 'react-icons/fa6'
+import { FaUserGroup, FaClock, FaCircleQuestion } from 'react-icons/fa6'
+import { FaCircleXmark, FaCircleCheck, FaCircleArrowLeft } from 'react-icons/fa6'
 
 const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
@@ -45,12 +49,16 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
 
     const myPosition = queue.findIndex((s: any) => s.id === currentData.id) + 1 
 
+    const navigate = useNavigate()
+    const leave = () => {
+        OHService.leaveAsStudent(currentData.id, currentData.roomID)
+        navigate('/student/rooms')
+    }
+
     return (
         <div style={{ userSelect: 'none', width: 800 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h1>
-                    Hi, {currentData.id || "unknown"}!
-                </h1>
+                <Logo/>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
                     <div style={{ color: '#085f05' }}>● Connected</div>
                     <Logout currentData={currentData} setCurrentData={setCurrentData} />
@@ -81,7 +89,7 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                 </div>
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0px' }}>
                     <h2>
-                        TAs
+                        <div className="withIcon"> <FaUserGroup/> TAs</div>
                         <br />
                         <div style={{ display: 'flex', gap: -50, marginTop: '15px', marginLeft: '15px' }}>
                             {queue.slice(0, 5).map((t: any) => <UserIcon key={t.id} name={t.id} size={50} />)}
@@ -94,16 +102,16 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                         </div>
                     </h2>
 
-                    <h2>Position: <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{myPosition}</span>
+                    <h2><div className="withIcon"><FaClock/> Position: <span style={{ color: 'var(--accent)', fontWeight: 800 }}>{myPosition}</span></div>
                         <br />
                         <i style={{ color: 'var(--medium)', fontSize: '0.8em' }}>
                             Estimated Wait Time is
-                            <span style={{ fontWeight: 800, color: 'var(--accent)' }}> {Math.round(rooms && (rooms[currentData.roomID].avgStudentTime * (myPosition) / 6) / 10)} min</span>
+                            <span style={{ fontWeight: 800, color: 'var(--accent)' }}> {Math.round(rooms && rooms[currentData.roomID] && (rooms[currentData.roomID].avgStudentTime * (myPosition) / 6) / 10)} min</span>
                         </i>
                     </h2>
 
-                    <h2>
-                        Your Question
+                    <h2 className="withIcon">
+                        <FaCircleQuestion/> Your Question
                     </h2>
 
                     <textarea 
@@ -113,10 +121,12 @@ const StudentRoomView = ({ currentData, setCurrentData, rooms }: any) => {
                         value={question} onChange={e => setQuestion(e.target.value)} placeholder="Enter Your Question..." />
 
                     <div style={{ display: 'flex', justifyContent: 'center', gap: 15 }}>
-                        {!edit && <button onClick={() => { setEdit(true) }} style={{ width: '100%' }}>Edit</button>}
-                        {edit && <button style={{ filter: 'hue-rotate(90deg)', width: '50%' }} onClick={e => cancelQuestion() }>Cancel</button>}
-                        {edit && <button style={{ width: '50%' }} disabled={!question || question === ""} onClick={e => saveQuestion()}>Save</button>}
+                        {!edit && <button onClick={() => { setEdit(true) }} style={{ width: '100%' }}><div className="withIcon center"><FaPen/>Edit</div></button>}
+                        {edit && <button style={{ filter: 'hue-rotate(90deg)', width: '50%' }} onClick={e => cancelQuestion()}><div className="withIcon center"><FaCircleXmark/>Cancel</div></button>}
+                        {edit && <button style={{ width: '50%' }} disabled={!question || question === ""} onClick={e => saveQuestion()}><div className="withIcon center"><FaCircleCheck/>Save</div></button>}
                     </div>
+                    <br />
+                    <div><button style={{ filter: 'hue-rotate(90deg)', width: '100%' }} onClick={e => leave()}><div className="withIcon center"><FaCircleArrowLeft />Leave Queue</div></button></div>
                 </div>
             </div>
         </div>

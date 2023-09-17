@@ -1,4 +1,5 @@
 import UserIcon from "./UserIcon"
+import { FaCircleArrowRight } from 'react-icons/fa6'
 
 export const RoomCard = ({ disable, joinRoom, name, room, message, subtitle }: any) => {
 
@@ -56,7 +57,9 @@ export const RoomCard = ({ disable, joinRoom, name, room, message, subtitle }: a
             </div>
         </div>
 
-        <button style={{ marginTop: 15 }} disabled={disable} onClick={() => joinRoom(name)}>{message || "Join Room"}</button>
+        <button style={{ marginTop: 15 }} disabled={disable} onClick={() => joinRoom(name)}><div className="withIcon" style={{ justifyContent: 'center' }}>
+            <FaCircleArrowRight /> {message || "Join Room"}
+        </div></button>
     </div>)
 }
 

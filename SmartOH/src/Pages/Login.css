@@ -20,7 +20,7 @@
     border-color: var(--medium);
     border-bottom-color: var(--dark);
     transform: translateY(1px);
-    color: var(--lighter);
+    color: var(--accent);
     /* color: #085f05; */
     background-color: var(--dark);
     /* border-bottom: 1px solid var(--accent); */
