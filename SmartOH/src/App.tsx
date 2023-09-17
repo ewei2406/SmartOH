@@ -14,8 +14,8 @@ import StudentRoomView from './Pages/StudentRoomView';
 const App: React.FC = () => {
 
     const [currentData, setCurrentData] = useState({
-        id: 'Carl',
-        roomID: 'room A',
+        id: '',
+        roomID: '',
         loggedIn: false,
         userType: 'student'
     });
@@ -33,16 +33,12 @@ const App: React.FC = () => {
     }, [])
 
     const handleLogin = () => {
-        const student = studentData.find((student) => student.name === currentData.id);
-        if (student) {
-            setCurrentData({
-                ...currentData,
-                loggedIn: true
-            })
-        }
+        if (currentData.id === "") return;
+        setCurrentData({
+            ...currentData,
+            loggedIn: true
+        })
     };
-
-
 
     console.log(currentData, rooms)
 

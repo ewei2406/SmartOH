@@ -6,8 +6,11 @@ import Logout from "../Components/Logout";
 import Logo from "../Components/Logo";
 import "./TARoomView.css";
 import UserIcon from "../Components/UserIcon";
-import { FaXmark, FaCircleCheck, FaCircleXmark, FaUserGroup, FaClock } from 'react-icons/fa6'
+import { FaXmark, FaCircleCheck, FaCircleXmark, FaUserGroup, FaClock, FaBolt, FaCircleArrowLeft, FaCircleArrowDown } from 'react-icons/fa6'
+import { PiDotsThreeVerticalBold } from 'react-icons/pi'
 import Popup from "../Components/Popup";
+import { GridLoader } from "react-spinners"
+import { useNavigate } from "react-router-dom";
 
 const COLUMN_NAMES = {
     CURRENTLY_HELPING: 'Currently Helping',
@@ -125,9 +128,10 @@ const MovableItem = ({
             <span style={{ color: 'var(--light)', fontWeight: 800, width: 30, textAlign: 'right' }}>{index + 1}.</span>
             <div ref={ref} className="card" style={{
                 opacity, padding: 10, width: '100%',
-                display: 'flex', alignItems: 'center',
-                gap: 10, borderRadius: 10, padding: 15, paddingLeft: 25, boxSizing: 'border-box'
+                display: 'flex', alignItems: 'center', cursor: 'grab',
+                gap: 10, borderRadius: 10, padding: 15, paddingLeft: 0, boxSizing: 'border-box'
             }}>
+                <span style={{ margin: '0px -5px', fontSize: '2em', color: 'var(--medium)', display: 'flex', alignItems: 'center' }}><PiDotsThreeVerticalBold/></span>
                 <UserIcon name={id} size={40} />
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'baseline', gap: 3 }}>
                     <div style={{ fontWeight: 800, flexShrink: 0 }}>{id}</div>
@@ -176,12 +180,19 @@ const Column = ({ children, className, title, content }) => {
         }
     };
 
+    const show = isOver && canDrop
+
     return (
         <div
             ref={drop}
             className={className}
-            style={{ color: getBackgroundColor(), display: 'flex', flexDirection: 'column' }}
+            style={{ color: getBackgroundColor(), display: 'flex', flexDirection: 'column', position: 'relative' }}
         >
+            <div style={{ alignItems: 'center', gap: 7, pointerEvents: 'none',
+                position: 'absolute', top: 60, bottom: -10, left: -10, right: -10, 
+                display: show ? 'flex' : 'none', justifyContent: 'center', paddingTop: 150, zIndex: 99990,
+                backdropFilter: 'blur(5px)', color: 'var(--accent)', fontWeight: 800, fontSize: '2em', textShadow: '0 0 10px black'
+            }}><FaCircleArrowDown/> Drop Here!</div>
             {content}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}
             >{children}</div>
@@ -250,6 +261,7 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
                 .filter((student) => student.beginHelpedByID === '')
                 .map((student, index) => (
                     <MovableItem
+                    
                         key={student.id}
                         id={student.id}
                         question={student.question}
@@ -287,40 +299,75 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
 
         const { CURRENTLY_HELPING, QUEUE } = COLUMN_NAMES;
 
+        const [summaryText, setSummaryText] = useState("No Summary generated yet!")
+        const [loading, setLoading] = useState(false);
+
+        const generate = () => {
+            setLoading(true)
+            OHService.getSummary(currentData.roomID, data => {
+                setSummaryText(data.current_topic)
+                setLoading(false);
+            })
+        }
+
+        summaryText.charAt(0).toUpperCase()
+
+        const navigate = useNavigate()
+        const leaveRoom = () => {
+            OHService.leaveAsTA(taID, roomID)
+            navigate('/ta/rooms')
+        }
+
         return (
             <div className="container" style={{ width: 800 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Logo />
                     <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
                         <div style={{ color: '#085f05' }}>● Connected</div>
+                        <button onClick={() => leaveRoom()} className="withIcon" style={{ filter: 'hue-rotate(135deg)'}}><FaCircleArrowLeft/> Leave Room</button>
                         <Logout currentData={currentData} setCurrentData={setCurrentData} />
                     </div>
                 </div>
 
-                <h2><FaClock />
-                        Average Wait Time
-                        <span style={{ fontWeight: 800, color: 'var(--accent)' }}> {Math.round(rooms && rooms[currentData.roomID] && (rooms[currentData.roomID].avgStudentTime / 6) / 10)} min</span>
-                </h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 40 }}>
+                    <div style={{ width: '50%' }}>
+                        <h2 >
+                            {currentData.roomID}
+                            <br />
+                            <i style={{ color: 'var(--medium)', fontSize: '0.8em' }}>{rooms && rooms[currentData.roomID] && rooms[currentData.roomID].class}</i>
+                        </h2>
+                        <h3 style={{ color: 'var(--lighter)', display: 'flex', alignItems: 'center', gap: 7 }}> <FaClock />
+                            Average Wait Time 
+                            <span style={{ display: 'flex', alignItems: 'center', fontWeight: 800, color: 'var(--accent)' }}> <FaBolt style={{ display: 'block' }} /> {Math.round(rooms && rooms[currentData.roomID] && (rooms[currentData.roomID].avgStudentTime / 6) / 10)} min</span>
+                        </h3>
+                    </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h2 style={{ width: '50%' }}>
-                        {currentData.roomID}
-                        <br />
-                        <i style={{ color: 'var(--medium)', fontSize: '0.8em' }}>{rooms && rooms[currentData.roomID] && rooms[currentData.roomID].class}</i>
-                    </h2>
-                    <h2 style={{ width: '50%' }}>
-                        <div className="withIcon"> <FaUserGroup /> TAs</div>
-                        <br />
-                        <div style={{ display: 'flex', gap: -50, marginTop: '15px', marginLeft: '15px' }}>
-                            {TAs.slice(0, 5).map((t) => <UserIcon key={t} name={t} size={50} />)}
-                            {TAs.length > 5 && <div style={{
-                                borderRadius: 50, border: '2px solid var(--dark)', padding: '0 10px',
-                                height: 50, fontWeight: 800, backgroundColor: 'var(--medium)', minWidth: 30,
-                                display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -10, zIndex: 999
-                            }}
-                            >{TAs.length - 5}+</div>}
+                    <div style={{ width: '50%', display: 'flex', flexDirection: 'column', gap: 0 }}>
+                        <h2>
+                            <div className="withIcon"> <FaUserGroup /> TAs</div>
+                            <div style={{ display: 'flex', gap: -50, marginTop: '15px', marginLeft: '15px' }}>
+                                {TAs.slice(0, 5).map((t) => <UserIcon key={t} name={t} size={50} />)}
+                                {TAs.length > 5 && <div style={{
+                                    borderRadius: 50, border: '2px solid var(--dark)', padding: '0 10px',
+                                    height: 50, fontWeight: 800, backgroundColor: 'var(--medium)', minWidth: 30,
+                                    display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -10, zIndex: 999
+                                }}
+                                >{TAs.length - 5}+</div>}
+                            </div>
+                        </h2>
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h2 className="withIcon"><FaBolt/> Room Topic Summary</h2>
+                                <button style={{ display: 'flex' }} onClick={() => generate()} >{loading ? <GridLoader color="var(--accent)" size={4} margin={0} speedMultiplier={2}/> : <FaBolt />}</button>
+                            </div>
+                            <div style={{ width: '100%', position: 'relative', color: loading ? 'var(--light)' : 'var(--light)' }}>
+                                <div style={{ filter: loading ? 'blur(5px)' : 'none', fontSize: '1em' }}>{summaryText.split("\n").map(c => <div>{c}</div>)}</div>
+                                <div className="withIcon" style={{ display: loading ? 'flex' : 'none', justifyContent: 'center', position: 'absolute', color: 'var(--accent)', top: 0, bottom: 0, right: 0, left: 0, margin: 'auto'}}>
+                                    <GridLoader color="var(--accent)" size={7} margin={0} speedMultiplier={2} /> Generating AI Summary...
+                                </div>
+                            </div>
                         </div>
-                    </h2>
+                    </div>
                 </div>
 
                 <div className='container1' style={{ width: 800, display: 'flex' }}>
@@ -345,7 +392,14 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
         );
     }
     else {
-        return <></>
+        return <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Logo />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+                <div style={{ color: '#085f05' }}>● Connected</div>
+                <button onClick={() => leaveRoom()} className="withIcon" style={{ filter: 'hue-rotate(135deg)' }}><FaCircleArrowLeft /> Leave Room</button>
+                <Logout currentData={currentData} setCurrentData={setCurrentData} />
+            </div>
+        </div>
     }
 };
 

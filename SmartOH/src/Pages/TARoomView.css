@@ -7,13 +7,12 @@
   .container1 {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
   }
 
 .column {
     width: 380px;
     min-height: 150px;
-    margin: 10px;
     border-radius: 10px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     display: flex;
