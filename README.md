@@ -82,7 +82,7 @@ Here are the steps to get the app up and running:
 
 ```bash
 # Clone the repository
-git clone https://github.com/YourUsername/SmartOH.git
+git clone https://github.com/ewei2406/SmartOH.git
 
 # Navigate into the directory
 cd SmartOH
