@@ -8,13 +8,37 @@ import "./TARoomView.css";
 import UserIcon from "../Components/UserIcon";
 import { FaXmark, FaCircleCheck, FaCircleXmark, FaUserGroup, FaClock } from 'react-icons/fa6'
 import Popup from "../Components/Popup";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const COLUMN_NAMES = {
     CURRENTLY_HELPING: 'Currently Helping',
     QUEUE: 'Queue'
 }
 
-const MovableItem = ({
+function interpolateColor(x) {
+    // Ensure that x is within the valid range
+    x = Math.max(0, Math.min(100, x));
+  
+    // Define the RGB values for red and green
+    const red = [255, 0, 0];
+    const green = [0, 255, 0];
+  
+    // Calculate the interpolation factor
+    // This factor will be 0 for x=0 (red), 1 for x=100 (green), and linear in between
+    const interpolationFactor = x / 100;
+  
+    // Interpolate between red and green
+    const interpolatedColor = [
+      Math.round((1 - interpolationFactor) * red[0] + interpolationFactor * green[0]),
+      Math.round((1 - interpolationFactor) * red[1] + interpolationFactor * green[1]),
+      Math.round((1 - interpolationFactor) * red[2] + interpolationFactor * green[2])
+    ];
+  
+    return `rgb(${interpolatedColor[0]}, ${interpolatedColor[1]}, ${interpolatedColor[2]})`;
+  }
+
+const MovableItem = ({  
     id,
     timestamp,
     beginHelpedByID,
@@ -24,7 +48,8 @@ const MovableItem = ({
     moveCardHandler,
     setItems,
     taID,
-    roomID
+    roomID,
+    matchPercentage,
 }) => {
     const changeItemColumn = (currentItem, columnName) => {
         if (columnName == COLUMN_NAMES.CURRENTLY_HELPING) {
@@ -137,7 +162,31 @@ const MovableItem = ({
                 <div onClick={() => askDelete(id, roomID)} className="delete" style={{ color: 'var(--light)', position: 'absolute', top: 10, right: 10, fontSize: '0.8em' }}>
                     <FaXmark />
                 </div>
-            </div>
+                {matchPercentage && 
+                <div style={{ width: 40, height: 40 , marginLeft: 'auto', flexShrink: '0', flexGrow: '0', paddingRight: '7px'}}>
+                    <CircularProgressbar strokeWidth='6' text={matchPercentage} value={matchPercentage} styles={{
+                        path: {
+                            // Path color
+                            stroke: interpolateColor(matchPercentage),
+                            // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                            strokeLinecap: 'butt',
+                        },
+                            // Customize the circle behind the path, i.e. the "total progress"
+                            trail: {
+                            // Trail color
+                            stroke: '#2A2A2A',
+                            // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                            strokeLinecap: 'butt',
+                        },
+                        text: {
+                            // Text color
+                            fill: interpolateColor(matchPercentage),
+                            // Text size
+                            fontSize: '42px',
+                            fontWeight: 'bold'
+                        },
+                    }}/>
+                </div>}
             <Popup showPopup={showpopup} content={
                 <div className="card" style = {{ padding: 30, boxShadow: '0 0 15px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 15 }}>
                     <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -151,6 +200,7 @@ const MovableItem = ({
                 </div>
             }/>
         </div>
+    </div>
     );
 };
 
@@ -258,6 +308,7 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
                         currentColumnName={studentColumn(student, taID)}
                         timestamp={new Date()}
                         setItems={setItems}
+                        matchPercentage={student.percentage}
                         index={index}
                         moveCardHandler={moveCardHandler}
                         roomID={roomID}
@@ -284,11 +335,46 @@ const TARoomView = ({ currentData, setCurrentData, rooms }) => {
                 ));
         }
 
+        const calculatePercentages = () => {
+            let target = items.filter((student) => student.beginHelpedByID === taID).map((student) => student.question);
+            console.log('hello')
+            if(target.length < 1) {
+                return;
+            }
+            else {
+                target = target[0];
+            }
+            let stringlist = items.filter((student) => student.beginHelpedByID === '').map((student) => student.question);
+            OHService.getSimilarities({target_string: target, string_list: stringlist}).then((res) => {
+                console.log(res.data);
+                let percentages = res.data
+                let index = 0;
+                let newItems = items.map((student) => {
+                    if(student.beginHelpedByID === '') {
+                        let newStudent = student;
+                        let percent = Math.round(percentages[index] * 100) < 10 ? 1 : Math.round(percentages[index] * 100);
+                        if(percent > 100) { percent = 100;}
+                        newStudent.percentage = percent;
+                        index++;
+                        return newStudent;
+                    }
+                    return student;
+                });
+                setItems(newItems);
+            })
+        }
 
         const { CURRENTLY_HELPING, QUEUE } = COLUMN_NAMES;
 
+        const percentage = 65;
+        const minValue = 0;
+        const maxValue = 65;
+
+
         return (
             <div className="container" style={{ width: 800 }}>
+              <button onClick={calculatePercentages}>
+              </button>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Logo />
                     <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>

@@ -159,7 +159,18 @@ app.post('/api/ml/summarize', async (req, res) => {
     axios.post('http://localhost:8000/current-topic', postData).then(result => {
         res.json(result.data.current_topic)
     })
-})
+});
+
+app.post('/api/ml/similarity', async (req, res) => {
+    console.log(req.body)
+    axios.post('http://127.0.0.1:8000/similarity', {
+        target_string: req.body.request.target_string,
+        string_list: req.body.request.string_list
+    }).then(result => {
+        console.log()
+        res.json(result.data.similarity_scores[0])
+    })
+});
 
 app.get('/api/rooms/create', (req, res) => {
     if (req.query.roomID in rooms) {

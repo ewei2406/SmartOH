@@ -50,7 +50,13 @@ const putbackStudent = (studentID: string, roomID: string, index: number) => {
     console.log('PUTTING BACK ' + studentID);
     axios.get(`/api/ta/putback?roomID=${roomID}&id=${studentID}&index=${index}`)
 }
+const getSimilarities = (request: any) => {
 
-const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA, updateQuestion , helpAsTA, putbackStudent}
+    return axios.post('/api/ml/similarity', { request })
+}
+
+
+
+const OHService = { subscribe, joinAsStudent, joinAsTA, leaveAsTA, leaveAsStudent , moveStudentAsTA, updateQuestion , helpAsTA, putbackStudent, getSimilarities}
 
 export {OHService}
