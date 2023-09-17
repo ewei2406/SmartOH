@@ -25,7 +25,7 @@ const TAAllRoomsView = ({ currentData, setCurrentData, rooms }: any) => {
         </div>
         <div>
             <h2>
-                Your Rooms
+                Your Active Rooms
             </h2>
 
             <div className="cardScroller">
